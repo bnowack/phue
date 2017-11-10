@@ -6,16 +6,18 @@
   },
   "private": true,
   "devDependencies": {
-    "karma": "*",
-    "karma-jasmine": "*",
+    "chromedriver": "^2.33.1",
+    "geckodriver": "^1.9.0",
     "jasmine-core": "*",
+    "karma": "*",
     "karma-chrome-launcher": "^1.0.1",
     "karma-coverage": "^1.1.0",
     "karma-firefox-launcher": "^1.0.0",
+    "karma-jasmine": "*",
     "karma-junit-reporter": "^1.0.0",
     "karma-phantomjs-launcher": "^1.0.0",
-    "chromedriver": "^2.33.1",
-    "geckodriver": "^1.9.0",
-    "phantomjs-prebuilt": "^2.1.15"
-  }
+    "phantomjs-prebuilt": "^2.1.15",
+    "vue": "^2.5.3"
+  },
+  "dependencies": {}
 }
