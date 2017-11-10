@@ -1,0 +1,48 @@
+{
+  "base": "/",
+  "version": "0.0.1",
+  "meta": {
+    "name": "Phue",
+    "description": "A PHP micro-framework for applications driven by Vue.js",
+    "url": "https://github.com/bnowack/phue",
+    "language": "en",
+    "type" : {
+      "facebook": "website",
+      "schema": "SoftwareApplication"
+    },
+    "address": "",
+    "email": "",
+    "phone": "",
+    "titleSuffix": " - Phue",
+    "robots": "index,follow",
+    "viewport": "width=device-width, initial-scale=1",
+    "errorPage": {
+      "heading": "An error occurred",
+      "homeLink": "Back to homepage"
+    }
+  },
+  "icons": {
+    "browser": "{PHUE_SRC_DIR}Phue/Application/img/favicon.png",
+    "app": "{PHUE_SRC_DIR}Phue/Application/img/touch-icon.png",
+    "facebook": "{PHUE_SRC_DIR}Phue/Application/img/logo.png",
+    "schema": "{PHUE_SRC_DIR}Phue/Application/img/logo.png"
+  },
+  "templates": {
+    "page": "{PHUE_SRC_DIR}Phue/Application/templates/page.html.twig",
+    "partial": "{PHUE_SRC_DIR}Phue/Application/templates/partial.html.twig",
+    "error": "{PHUE_SRC_DIR}Phue/Application/templates/error.html.twig",
+    "content": "{PHUE_SRC_DIR}Phue/Application/templates/content.html.twig"
+  },
+  "startupBgColor": "#fff",
+  "themeHref": "{PHUE_SRC_DIR}Phue/Application/theme.css",
+  "dataDirectory": "data",
+  "serviceProviders": {
+    "users": "Phue\\User\\UserProvider"
+  },
+  "dbs": {
+    "schema": { "driver": "pdo_sqlite" },
+    "users": { "driver": "pdo_sqlite" }
+  },
+  "autoCheckSchema": true,
+  "adminAccount": ""
+}

@@ -1,0 +1,284 @@
+body {
+	margin: 0;
+	padding: 0;
+	background-color: #fff;
+	font-family: sans-serif;
+	color: #444;
+
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100vh;
+	overflow: hidden;
+}
+
+a {
+	color: #666;
+	text-decoration: none;
+}
+
+h1 {
+	flex: 0 0 50px;
+	margin: 0;
+	padding: 0 16px;
+	font-weight: lighter;
+	font-size: 20px;
+	line-height: 50px;
+	background-color: #888;
+	color: #fff;
+	text-transform: uppercase;
+}
+
+#report {
+	flex: 1 1 auto;
+	display: flex;
+	flex-direction: row;
+	align-items: stretch;
+	overflow: hidden;
+}
+
+/* nav */
+
+#feature-list {
+	flex: 1 1 20%;
+	min-width: 300px;
+	border-right: 1px solid #ddd;
+	display: flex;
+	flex-direction: column;
+}
+
+#feature-list > * {
+	border-bottom: 1px solid #eee;
+}
+
+#feature-list a.feature {
+	display: block;
+	padding: 0 16px;
+	line-height: 40px;
+	position: relative;
+}
+
+#feature-list a.feature:hover {
+	background-color: #f9f9f9;
+}
+
+#feature-list .selected,
+#feature-list .selected a:hover {
+	background-color: #f3f3f3;
+}
+
+#feature-list a.feature:before {
+	display: block;
+	content: "";
+	position: absolute;
+	right: 8px;
+	top: 10px;
+	font-size: 13px;
+	padding-top: 1px;
+	border-radius: 8px;
+	line-height: 18px;
+	width: 50px;
+	text-align: center;
+	color: #fff;
+}
+
+#feature-list a.feature.passed:before {
+	content: "PASS";
+	background-color: #0fbb91;
+}
+
+#feature-list a.feature.failed:before {
+	content: "FAIL";
+	background-color: #ce1339;
+}
+
+#feature-list a.feature.incomplete:before {
+	content: "WIP";
+	background-color: #e2d39e;
+}
+
+
+/* results */
+
+#results {
+	position: relative;
+	flex: 1 1 80%;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+/* feature */
+
+#results .feature {
+	position: relative;
+	padding: 0 16px 16px;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 40px;
+}
+
+#results .feature.deselected {
+	display: none;
+}
+
+#results .feature h2 {
+	font-weight: lighter;
+}
+
+#results .feature h2:before {
+	content: "Feature: ";
+	color: #aaa;
+}
+
+/* scenario */
+
+#results .scenario {
+	position: relative;
+}
+
+#results .scenario h3 {
+	font-weight: lighter;
+	margin: 40px 0 12px;
+}
+
+#results .scenario h3:before {
+	content: "Scenario: ";
+	color: #aaa;
+}
+
+/* step */
+
+#results .step {
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	padding: 0 8px;
+	line-height: 30px;
+	margin: 0 0 12px 4px;
+}
+
+#results .step + .step:before {
+	display: block;
+	position: absolute;
+	top: -8px;
+	right: 0;
+	left: 8px;
+	content: '';
+	border-top: 1px solid #eee;
+}
+
+#results .step.passed {
+	border-left: 2px solid #0fbb91;
+}
+
+#results .step.skipped,
+#results .step.pending {
+	border-left: 2px solid #e2d39e;
+}
+
+#results .step.failed {
+	border-left: 2px solid #ce1339;
+}
+
+#results .step .keyword {
+	flex: 0 0 70px;
+	color: #aaa;
+}
+
+#results .step .text {
+	flex: 0 0 35%;
+}
+
+#results .step .result {
+	flex: 1 1 60%;
+	padding: 0 16px;
+	color: #aaa;
+}
+
+#results .step img {
+	max-width: 100%;
+	box-shadow: 0 0 10px #eee;
+	margin: 16px 0;
+	border: 1px solid #ddd;
+}
+
+/* stats */
+
+#results .stats {
+	position: absolute;
+	top: 0;
+	right: 0;
+	font-size: 13px;
+}
+
+#results .feature > .stats {
+	right: 16px;
+	font-size: 15px;
+}
+
+#results .feature > .stats .badge {
+	padding: 4px 12px;
+}
+
+#results .stats .badge .total {
+	display: none;
+}
+#results .feature > .stats .badge.passed .total {
+	display: inline;
+}
+
+#results .stats .badge {
+	display: inline-block;
+	padding: 4px 8px;
+	border-radius: 12px;
+	background-color: #f3f3f3;
+	margin-left: 4px;
+}
+
+#results .stats .badge.passed {
+	background-color: #0fbb91;
+	color: #fff;
+}
+
+#results .stats .badge.failed {
+	background-color: #ce1339;
+	color: #fff;
+}
+
+#results .stats .badge.skipped,
+#results .stats .badge.pending {
+	background-color: #e2d39e;
+}
+
+#results .stats .badge.failed[data-count="0"],
+#results .stats .badge.skipped[data-count="0"],
+#results .stats .badge.pending[data-count="0"] {
+	display: none;
+}
+
+/* print */
+
+@media print {
+
+	body {
+		display: block;
+		height: auto;
+		overflow: auto;
+	}
+
+	#report {
+		display: block;
+		overflow: auto;
+	}
+
+	h1 {
+		border-bottom: 1px solid #ccc;
+		flex: 0 0 auto;
+		color: #333;
+		background-color: #fff;
+	}
+
+	#feature-list {
+		display: none !important;
+	}
+
+}

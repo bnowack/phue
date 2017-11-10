@@ -1,0 +1,9 @@
+{
+  "routes": {
+    "/secured": {
+      "pageTitle": "Secured area",
+      "content": "Access granted",
+      "role": "admin"
+    }
+  }
+}

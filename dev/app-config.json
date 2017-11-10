@@ -1,0 +1,9 @@
+{
+  "base": [
+    "/test-base/",
+    "/"
+  ],
+  "dataDirectory": "dev/data",
+  "adminAccount": "admin",
+  "accessDeniedMessage": "Access Denied"
+}

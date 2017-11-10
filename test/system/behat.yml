@@ -1,0 +1,44 @@
+# Behat base profile
+default:
+  extensions:
+    Behat\MinkExtension:
+      # Mink paths will be prefixed with the base URL
+      base_url: 'http://localhost:8888/'
+      # user agent definitions
+      browser_name: "chrome" # needed for selenium to use chrome driver
+      sessions:
+        # default user agent: Goutte (headless, non-JS)
+        default:
+          goutte: ~
+        # UI user agent (Chrome via Selenium)
+        javascript:
+          selenium2:
+            # selenium server hub
+            wd_host: "http://127.0.0.1:4444/wd/hub"
+  suites:
+    # default suite
+    default:
+      # skip all tests tagged as @skip
+      filters:
+        tags: ~@skip
+      # which feature files directory to include in this suite
+      paths:
+        - %paths.base%/../../test/system/features
+      # which context files to auto-load in this suite
+      contexts:
+        - Behat\MinkExtension\Context\MinkContext
+        - Test\System\Context\CoreContext
+        - Test\System\Context\ReportContext
+        - Test\System\Context\PhueContext
+      # where to look for fixtures
+      fixtures:
+        dir: 'test/fixtures/'
+      # User accounts (`user: pass`)
+      credentials:
+        admin: ''
+      # report settings, make sure the directory specified in `path` exists
+      report:
+        fileName: "system"
+        title: "System Test Report"
+        path: 'test/reports/system/'
+        src: 'test/system/report-assets/'

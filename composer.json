@@ -1,0 +1,55 @@
+{
+  "name": "bnowack/phue",
+  "description": "A PHP micro-framework for applications driven by Vue.js",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Benjamin Nowack",
+      "email": "mail@bnowack.de"
+    }
+  ],
+  "require": {
+    "silex/silex": "2.*",
+    "twig/twig": "1.*",
+    "symfony/security-csrf": "~3.1",
+    "symfony/security": "~3.1",
+    "doctrine/dbal": "~2.2"
+  },
+  "require-dev": {
+    "phpspec/phpspec": "^3.0",
+    "phpunit/phpunit": "^5.0",
+    "ext-xdebug": ">=2.2.1",
+    "leanphp/phpspec-code-coverage": "@stable",
+    "behat/behat": "3.4.1",
+    "behat/mink-extension": "2.2",
+    "behat/mink-goutte-driver": "1.2.1",
+    "behat/mink-selenium2-driver": "dev-master#46404b0",
+    "se/selenium-server-standalone": "3.4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Phue\\": "src/Phue",
+      "Phue\\Schema\\Change\\": [
+        "src/Phue/Schema/Changes"
+      ]
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Spec\\Phue\\": "test/phpspec",
+      "Test\\System\\Context\\": "test/system/contexts"
+    }
+  },
+  "config": {
+    "process-timeout": 36000
+  },
+  "scripts": {
+    "phue": "php -S 0.0.0.0:8888 dev/index.php",
+    "selenium-chrome-mac": "java -Dwebdriver.chrome.driver=node_modules/chromedriver/bin/chromedriver -jar vendor/se/selenium-server-standalone/bin/selenium-server-standalone.jar || true",
+    "selenium-chrome-win": "java -Dwebdriver.chrome.driver=node_modules\\.bin\\chromedriver.cmd -jar vendor\\se\\selenium-server-standalone\\bin\\selenium-server-standalone.jar || true",
+    "behat-definitions":  "behat --colors --config test/system/behat.yml -dl --lang=en",
+    "test-system":        "behat --colors --config test/system/behat.yml || true",
+    "test-php": "phpspec -c=dev/php-specs/phpspec.yml",
+    "test-js": "karma start test/unit/js/karma.conf.js -- --tags @active"
+  }
+}

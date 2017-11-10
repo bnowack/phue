@@ -1,0 +1,7 @@
+{
+    "foo": "bar2",
+    "bar": "baz2",
+    "object": {
+        "bar": "baz2"
+    }
+}

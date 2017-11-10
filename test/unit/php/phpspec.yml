@@ -1,0 +1,14 @@
+bootstrap: dev/php-specs/config/bootstrap.php
+formatter.name: pretty
+extensions:
+    LeanPHP\PhpSpec\CodeCoverage\CodeCoverageExtension:
+      whitelist:
+      - src
+      format:
+          - html
+      output:
+          html: test/reports/php-coverage
+suites:
+    default:
+        src_path: src
+        spec_prefix: Spec
