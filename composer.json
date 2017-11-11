@@ -36,7 +36,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Spec\\Phue\\": "test/phpspec",
+      "phpspec\\": "test/unit/phpspec",
       "Test\\System\\Context\\": "test/system/contexts"
     }
   },
@@ -48,8 +48,8 @@
     "selenium-chrome-mac": "java -Dwebdriver.chrome.driver=node_modules/chromedriver/bin/chromedriver -jar vendor/se/selenium-server-standalone/bin/selenium-server-standalone.jar || true",
     "selenium-chrome-win": "java -Dwebdriver.chrome.driver=node_modules\\.bin\\chromedriver.cmd -jar vendor\\se\\selenium-server-standalone\\bin\\selenium-server-standalone.jar || true",
     "behat-definitions":  "behat --colors --config test/system/behat.yml -dl --lang=en",
-    "test-system":        "behat --colors --config test/system/behat.yml || true",
-    "test-php": "phpspec -c=dev/php-specs/phpspec.yml",
-    "test-js": "karma start test/unit/js/karma.conf.js -- --tags @active"
+    "system-tests":        "behat --colors --config test/system/behat.yml || true",
+    "php-specs": "phpspec --ansi -c=test/unit/phpspec/phpspec.yml",
+    "js-tests": "karma start test/unit/js/karma.conf.js -- --tags @active"
   }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Spec\Phue;
+namespace phpspec;
 
 /**
  * Trait for PHP specs
