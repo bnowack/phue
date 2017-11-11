@@ -23,6 +23,7 @@ class ConfigSpec extends ObjectBehavior
         $this->get('foo')->shouldReturn('bar');
         $this->get('baz')->shouldReturn(null);
     }
+
     public function it_returns_a_default_value()
     {
         $this->get('undefined', 'test')->shouldReturn('test');
@@ -33,6 +34,14 @@ class ConfigSpec extends ObjectBehavior
         $this->set('var1', 'test');
         $this->set('var2', '{{var1}}');
         $this->get('var2')->shouldReturn('test');
+    }
+
+    public function it_replaces_constants()
+    {
+        define('CONFIG_TEST', 'test');
+
+        $this->set('var1', '{CONFIG_TEST}');
+        $this->get('var1')->shouldReturn('test');
     }
 
     public function it_merges_options()

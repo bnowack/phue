@@ -44,9 +44,14 @@ class Config
      */
     public function get($name, $default = null)
     {
-        return isset($this->data->$name)
-            ? $this->replacePlaceholders($this->data->$name)
+        $value = isset($this->data->$name)
+            ? $this->data->$name
             : $default;
+
+        $value = $this->replacePlaceholders($value);
+        $value = $this->replaceConstants($value);
+
+        return $value;
     }
 
     /**
@@ -81,8 +86,12 @@ class Config
     protected function replacePlaceholders($value)
     {
         if (is_string($value)) {
-            if (preg_match('/\{\{\s*([^\s\}]+)\s*\}\}/', $value, $matches)) {
-                $value = str_replace($matches[0], $this->get($matches[1], ''), $value);
+            while (preg_match('/\{\{\s*([^\s\}]+)\s*\}\}/', $value, $matches)) {
+                $value = str_replace(
+                    $matches[0],
+                    $this->get($matches[1], ''),
+                    $value
+                );
             }
         } elseif (is_array($value)) {
             $value = array_map(array($this, 'replacePlaceholders'), $value);
@@ -90,6 +99,28 @@ class Config
             $value = clone $value;
             foreach ($value as $prop => $propValue) {
                 $value->$prop = $this->replacePlaceholders($propValue);
+            }
+        }
+
+        return $value;
+    }
+
+    protected function replaceConstants($value)
+    {
+        if (is_string($value)) {
+            while (preg_match('/\{([A-Z0-9_]+)\}/', $value, $matches)) {
+                $value = str_replace(
+                    $matches[0],
+                    defined($matches[1]) ? constant($matches[1]) : '',
+                    $value
+                );
+            }
+        } elseif (is_array($value)) {
+            $value = array_map(array($this, 'replaceConstants'), $value);
+        } elseif (is_object($value)) {
+            $value = clone $value;
+            foreach ($value as $prop => $propValue) {
+                $value->$prop = $this->replaceConstants($propValue);
             }
         }
 
