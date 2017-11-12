@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="{{ meta.language }}" prefix="og: http://ogp.me/ns#">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="robots" content="{{ meta.robots }}"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+    <meta name="description" content="{{ meta.description }}"/>
+    <meta name="viewport" content="{{ meta.viewport }}"/>
+    <meta name="mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+
+    <meta name="og:site_name" content="{{ meta.name }}"/>
+    <meta name="og:title" content="{{ pageTitle }}"/>
+    <meta name="og:type" content="{{ meta.type.facebook }}"/>
+    <meta name="og:image" content="{{ icons.facebook }}"/>
+
+    <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "{{ meta.type.schema }}",
+            "url": "{{ meta.url }}",
+            "name": "{{ meta.name }}",
+            "description": "{{ meta.description }}",
+            "image": "{{ icons.schema }}"
+        }
+    </script>
+    {% if meta.organization is defined %}
+    <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "Organization",
+            "name": "{{ meta.organization }}",
+            "address": "{{ meta.address }}",
+            "email": "{{ meta.email }}",
+            "telephone": "{{ meta.phone }}"
+        }
+    </script>
+    {% endif %}
+
+    <base href="{{ base }}"/>
+
+    <link rel="shortcut icon" href="{{ icons.browser }}?{{ meta.version }}" data-size="32x32"/>
+    <link rel="apple-touch-icon" href="{{ icons.app }}?{{ meta.version }}" data-size="152x152"/>
+    <link rel="manifest" href="{{ base }}manifest.json?{{ meta.version }}"/>
+
+    <title data-suffix="{{ meta.titleSuffix }}">{{ pageTitle }}{{ meta.titleSuffix }}</title>
+
+    <style>
+        {% block style %}
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        {% endblock %}
+
+    </style>
+
+    <link rel="stylesheet" href="{{ appTheme }}?{{ meta.version }}"/>
+
+
+    <script type="text/javascript">
+        {% block script %}
+
+        window.phue = {
+            version: "{{ meta.version }}",
+            base: "{{ base }}",
+            activeView: "{{ view.path }}"
+        };
+
+        {% endblock %}
+
+    </script>
+</head>
+<body>
+    {% block body %}
+        <phue-app>
+
+            {% block header %}
+                <phue-app-header></phue-app-header>
+            {% endblock %}
+
+            {% block canvas %}
+                <phue-app-canvas>
+
+                    {% block view %}
+                        <phue-app-view
+                                path="{{ view.path }}"
+                                element="{{ element }}"
+                                element-data="{{ elementData|json_encode }}">
+                            {{ content|raw }}
+                        </phue-app-view>
+                    {% endblock %}
+
+                </phue-app-canvas>
+            {% endblock %}
+
+            {% block footer %}
+                <phue-app-footer></phue-app-footer>
+            {% endblock %}
+
+        </phue-app>
+    {% endblock %}
+</body>
+</html>

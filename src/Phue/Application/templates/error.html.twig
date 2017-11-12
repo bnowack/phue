@@ -1,0 +1,34 @@
+
+{% extends baseTemplate %}
+
+{% block view %}
+
+    <phue-app-view path="{{ view.path }}">
+
+        <h1>{{ meta.errorPage.heading }}</h1>
+
+        <p>
+            <a href="{{base}}">{{ meta.errorPage.homeLink }}</a>
+        </p>
+
+        {% for exception in exceptions %}
+
+            <phue-exception code="{{exception.statusCode}}" message='{{exception.message}}'>
+                <ul class="trace">
+
+                {% for entry in exception.trace %}
+                    {% if entry.line %}
+
+                        <li>in <span class="file">{{entry.file}}</span> line <span class="line">{{entry.line}}</span></li>
+
+                    {% endif %}
+                {% endfor %}
+
+                </ul>
+            </phue-exception>
+
+        {% endfor %}
+
+    </phue-app-view>
+
+{% endblock %}

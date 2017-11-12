@@ -28,13 +28,13 @@
     "schema": "{PHUE_SRC_DIR}Phue/Application/img/logo.png"
   },
   "templates": {
-    "page": "{PHUE_SRC_DIR}Phue/Application/templates/page.html.twig",
-    "partial": "{PHUE_SRC_DIR}Phue/Application/templates/partial.html.twig",
-    "error": "{PHUE_SRC_DIR}Phue/Application/templates/error.html.twig",
-    "content": "{PHUE_SRC_DIR}Phue/Application/templates/content.html.twig"
+    "app": "Phue/Application/templates/app.html.twig",
+    "error": "Phue/Application/templates/error.html.twig",
+    "partial": "Phue/Application/templates/partial.html.twig",
+    "content": "Phue/Application/templates/content.html.twig"
   },
   "startupBgColor": "#fff",
-  "themeHref": "{PHUE_SRC_DIR}Phue/Application/theme.css",
+  "appTheme": "{PHUE_SRC_DIR}Phue/Application/css/app.css",
   "dataDirectory": "data",
   "serviceProviders": {
     "users": "Phue\\User\\UserProvider"
