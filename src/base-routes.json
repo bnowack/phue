@@ -4,6 +4,11 @@
     "/": {
       "pageTitle": "Welcome",
       "contentTemplate": "Phue/Application/doc/welcome.html.twig"
+    },
+
+    "/manifest.json": {
+      "pageTemplate": "Phue/Application/templates/manifest.json.twig",
+      "contentType": "application/json"
     }
   }
 }
