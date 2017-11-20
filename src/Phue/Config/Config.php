@@ -11,7 +11,7 @@ use Phue\Exception\InvalidJsonException;
 class Config
 {
 
-    /** @var array Configuration data */
+    /** @var object Configuration data */
     protected $data = null;
 
     /**
@@ -52,6 +52,16 @@ class Config
         $value = $this->replaceConstants($value);
 
         return $value;
+    }
+
+    /**
+     * Returns a list of all defined option names
+     *
+     * @return array
+     */
+    public function getAllKeys()
+    {
+        return array_keys((array)$this->data);
     }
 
     /**
