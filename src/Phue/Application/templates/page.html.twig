@@ -39,69 +39,54 @@
 
     <base href="{{ base }}"/>
 
-    <link rel="shortcut icon" href="{{ icons.browser }}?{{ meta.version }}" data-size="32x32"/>
-    <link rel="apple-touch-icon" href="{{ icons.app }}?{{ meta.version }}" data-size="152x152"/>
-    <link rel="manifest" href="{{ base }}manifest.json?{{ meta.version }}"/>
+    <link rel="shortcut icon" href="{{ icons.browser }}?{{ appVersion }}" data-size="32x32"/>
+    <link rel="apple-touch-icon" href="{{ icons.app }}?{{ appVersion }}" data-size="152x152"/>
+    <link rel="manifest" href="{{ base }}manifest.json?{{ appVersion }}"/>
 
     <title data-suffix="{{ meta.titleSuffix }}">{{ pageTitle }}{{ meta.titleSuffix }}</title>
-
-    <style>
-        {% block style %}
-
-        body {
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-        }
-
-        {% endblock %}
-
-    </style>
-
-    <link rel="stylesheet" href="{{ appTheme }}?{{ meta.version }}"/>
-
+</head>
+<body>
+    {% block body %}
+    <div id="app-container">
+        <phue-app>
+            <phue-app-header></phue-app-header>
+            <phue-app-canvas>
+                <phue-app-content>
+                    {{ content|raw }}
+                </phue-app-content>
+            </phue-app-canvas>
+            <phue-app-footer></phue-app-footer>
+        </phue-app>
+    </div>
+    {% endblock %}
 
     <script type="text/javascript">
         {% block script %}
 
         window.phue = {
-            version: "{{ meta.version }}",
-            base: "{{ base }}",
-            activeView: "{{ view.path }}"
+            appVersion: "{{ appVersion }}",
+            appBase: "{{ appBase }}",
+            appView: "{{ appView }}"
         };
 
+        // hide app container until it gets initialized by phue-app
+        document.querySelector('#app-container').style.opacity = 0;
+
+        // load Promise polyfill if needed
+        if (!window.Promise) {
+            let script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = 'node_modules/native-promise-only/npo.js';
+            document.head.appendChild(script);
+        }
+
+        // load app script
+        let script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = '{{ appScript }}?{{ appVersion }}';
+        document.head.appendChild(script);
+
         {% endblock %}
-
     </script>
-</head>
-<body>
-    {% block body %}
-        <phue-app>
-
-            {% block header %}
-                <phue-app-header></phue-app-header>
-            {% endblock %}
-
-            {% block canvas %}
-                <phue-app-canvas>
-
-                    {% block view %}
-                        <phue-app-view
-                                path="{{ view.path }}"
-                                element="{{ element }}"
-                                element-data="{{ elementData|json_encode }}">
-                            {{ content|raw }}
-                        </phue-app-view>
-                    {% endblock %}
-
-                </phue-app-canvas>
-            {% endblock %}
-
-            {% block footer %}
-                <phue-app-footer></phue-app-footer>
-            {% endblock %}
-
-        </phue-app>
-    {% endblock %}
 </body>
 </html>
