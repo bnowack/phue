@@ -1,6 +1,15 @@
 {
-  "base": "/",
-  "version": "0.0.1",
+  "appBase": "/",
+  "appVersion": "0.1.0",
+  "appScript": "dist/app-bundle.js",
+  "phueSrcPath": "vendor/bnowack/phue/src/",
+  "_dataDirectory": "data",
+  "_databases": {
+    "schema": { "driver": "pdo_sqlite" },
+    "users": { "driver": "pdo_sqlite" }
+  },
+  "_adminUser": "",
+  "autoCheckSchema": true,
   "meta": {
     "name": "Phue",
     "description": "A PHP micro-framework for applications driven by Vue.js",
@@ -15,34 +24,25 @@
     "phone": "",
     "titleSuffix": " - Phue",
     "robots": "index,follow",
-    "viewport": "width=device-width, initial-scale=1",
-    "errorPage": {
-      "heading": "An error occurred",
-      "homeLink": "Back to homepage"
-    }
+    "viewport": "width=device-width, initial-scale=1"
   },
   "icons": {
-    "browser": "{PHUE_SRC_DIR}Phue/Application/img/favicon.png",
-    "app": "{PHUE_SRC_DIR}Phue/Application/img/touch-icon.png",
-    "facebook": "{PHUE_SRC_DIR}Phue/Application/img/logo.png",
-    "schema": "{PHUE_SRC_DIR}Phue/Application/img/logo.png"
+    "browser": "{{phueSrcPath}}Phue/Application/img/favicon.png",
+    "app": "{{phueSrcPath}}Phue/Application/img/touch-icon.png",
+    "facebook": "{{phueSrcPath}}Phue/Application/img/logo.png",
+    "schema": "{{phueSrcPath}}Phue/Application/img/logo.png"
   },
+  "errorPage": {
+    "heading": "An error occurred",
+    "homeLink": "Back to homepage"
+  },
+  "accessDeniedMessage": "Access Denied",
   "templates": {
-    "app": "Phue/Application/templates/app.html.twig",
-    "error": "Phue/Application/templates/error.html.twig",
-    "partial": "Phue/Application/templates/partial.html.twig",
-    "content": "Phue/Application/templates/content.html.twig"
+    "page": "Phue/Application/templates/page.html.twig",
+    "content": "Phue/Application/templates/content.html.twig",
+    "error": "Phue/Application/templates/error.html.twig"
   },
-  "startupBgColor": "#fff",
-  "appTheme": "{PHUE_SRC_DIR}Phue/Application/css/app.css",
-  "dataDirectory": "data",
   "serviceProviders": {
     "users": "Phue\\User\\UserProvider"
-  },
-  "dbs": {
-    "schema": { "driver": "pdo_sqlite" },
-    "users": { "driver": "pdo_sqlite" }
-  },
-  "autoCheckSchema": true,
-  "adminAccount": ""
+  }
 }
