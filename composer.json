@@ -45,12 +45,14 @@
     "process-timeout": 36000
   },
   "scripts": {
-    "phue": "php -S 0.0.0.0:8888 dev/index.php",
+    "app": "php -S 0.0.0.0:8888 dev/index.php",
     "selenium-chrome-mac": "java -Dwebdriver.chrome.driver=node_modules/chromedriver/bin/chromedriver -jar vendor/se/selenium-server-standalone/bin/selenium-server-standalone.jar || true",
     "selenium-chrome-win": "java -Dwebdriver.chrome.driver=node_modules\\.bin\\chromedriver.cmd -jar vendor\\se\\selenium-server-standalone\\bin\\selenium-server-standalone.jar || true",
     "behat-definitions":  "behat --colors --config test/system/behat.yml -dl --lang=en",
     "system-tests":        "behat --colors --config test/system/behat.yml || true",
     "php-specs": "phpspec --ansi -c=test/unit/phpspec/phpspec.yml",
-    "js-tests": "karma start test/unit/js/karma.conf.js -- --tags @active"
+    "js-tests": "karma start test/unit/js/karma.conf.js -- --tags @active",
+    "build-dev": "webpack --watch --config webpack.config.dev.js --colors --progress --hide-modules || true",
+    "build-prod": "webpack --config webpack.config.prod.js --colors --progress --hide-modules || true"
   }
 }
