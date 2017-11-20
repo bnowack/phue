@@ -1,9 +1,11 @@
 {
-  "base": [
+  "appBase": [
     "/test-base/",
     "/"
   ],
-  "dataDirectory": "dev/data",
-  "adminAccount": "admin",
+  "appScript": "dist/app-bundle.js",
+  "phueSrcPath": "src/",
+  "_dataDirectory": "dev/data",
+  "_adminUser": "admin",
   "accessDeniedMessage": "Access Denied"
 }
