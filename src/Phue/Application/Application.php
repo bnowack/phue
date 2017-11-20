@@ -3,6 +3,7 @@
 namespace Phue\Application;
 
 use Exception;
+use Phue\Config\Config;
 use Phue\Config\ConfigProvider;
 use Silex\Application as SilexApplication;
 use Silex\Application\TwigTrait;
@@ -13,6 +14,8 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Application class
  *
+ * @property Config $config
+ * @property bool $debug
  */
 class Application extends SilexApplication
 {
@@ -84,8 +87,7 @@ class Application extends SilexApplication
 
         parent::boot();
         $this->initBase($request);
-
-        $this->match('/', ApplicationController::class . '::handleHelloWorld');
+        $this->initRoutes();
     }
 
     /**
@@ -101,7 +103,7 @@ class Application extends SilexApplication
 
         $base = '/';// default
         $requestPath = $request->getPathInfo();// includes any sub-dir paths from web root
-        $configuredBases = $this->config->get('base');
+        $configuredBases = $this->config->get('appBase');
         if (!is_array($configuredBases)) {
             $configuredBases = [$configuredBases];
         }
@@ -114,6 +116,36 @@ class Application extends SilexApplication
         }
 
         $this->base = $base;
+    }
+
+    /**
+     * Initializes the application routes specified in the configuration
+     */
+    protected function initRoutes()
+    {
+        $routes = $this->config->get('routes', array());
+        foreach ($routes as $path => $routeConfig) {
+            $pathWithBase = $this->base . ltrim($path, '/');
+            if (is_string($routeConfig)) {// routeOptions is a `Class::method` string
+                $this->match($pathWithBase, $routeConfig);
+            } else {// routeOptions is an object (and should have a 'call' property)
+                // set default call
+                if (empty($routeConfig->call)) {
+                    $routeConfig->call = $this->config->get('defaultRouteCall');
+                }
+
+                // set default template
+                if (empty($routeConfig->pageTemplate)) {
+                    $routeConfig->pageTemplate = $this->config->get('templates')->page;
+                }
+
+                // activate route
+                $controller = $this->match($pathWithBase, $routeConfig->call);
+
+                // make route config available as controller call parameter
+                $controller->value('routeConfig', $routeConfig);
+            }
+        }
     }
 
     /**
@@ -130,19 +162,19 @@ class Application extends SilexApplication
     }
 
     /**
-     * Renders a view and returns a Response
+     * Renders a page template and returns a Response
      *
      * To stream a view, pass an instance of StreamedResponse as a third argument.
      *
      * @param string $view The view name
-     * @param array|\stdClass $parameters A set of parameters to pass to the view
+     * @param array|object $parameters A set of parameters to pass to the view
      * @param Response $response A Response instance
      *
      * @return Response A Response instance
      */
     public function render($view, $parameters = array(), Response $response = null)
     {
-        $templateParameters = $this->buildTemplateParameters($parameters);
+        $templateParameters = $this->getMergedTemplateParameters($parameters);
 
         // render content template, if defined
         if (!empty($templateParameters['contentTemplate'])) {
@@ -160,21 +192,32 @@ class Application extends SilexApplication
      * @param array $parameters List of view parameters
      * @return array Extended parameters
      */
-    public function buildTemplateParameters($parameters)
+    public function getMergedTemplateParameters($parameters)
     {
-        $globalParameters = $this->getGlobalTemplateParameters();
-        $combinedParameters = $globalParameters;
+        $mergedParameters = $this->getSharedTemplateParameters();
         foreach ($parameters as $name => $value) {
-            if (!isset($combinedParameters[$name])) {
-                $combinedParameters[$name] = $value;
-            } elseif (is_array($combinedParameters[$name])) {
-                $combinedParameters[$name] = array_merge($combinedParameters[$name], $value);
-            } else {
-                $combinedParameters[$name] = $value;
+            // cast objects to arrays
+            if (is_object($value)) {
+                $value = json_decode(json_encode($value), true);
             }
+
+            // param value is a plain value or not defined yet => set
+            if (!is_array($value) || !isset($mergedParameters[$name])) {
+                $mergedParameters[$name] = $value;
+                continue;
+            }
+
+            // param value is a list => override
+            if (empty($value) || isset($value[0])) {
+                $mergedParameters[$name] = $value;
+                continue;
+            }
+
+            // param value is a hash => merge
+            $mergedParameters[$name] = array_merge($mergedParameters[$name], $value);
         }
 
-        return $combinedParameters;
+        return $mergedParameters;
     }
 
     /**
@@ -182,43 +225,54 @@ class Application extends SilexApplication
      *
      * @return array Template parameters
      */
-    protected function getGlobalTemplateParameters()
+    protected function getSharedTemplateParameters()
     {
         /* @var Request $request */
         $request = $this['request_stack']->getCurrentRequest();
 
-        return [
-            "base" => $this->base,
-            "meta" => (array)$this->config->get('meta'),
-            "icons" => (array)$this->config->get('icons'),
-            "templates" => (array)$this->config->get('templates'),
-            "startupBgColor" => $this->config->get('startupBgColor'),
-            "sharedStylesHref" => $this->config->get('sharedStylesHref'),
-            "request" => $request,
-            "view" => [
-                "path" => $request->getPathInfo()
-            ],
-            "baseTemplate" => $this->isPartialRequest($request)
-                ? $this->config->get('templates')->partial
-                : $this->config->get('templates')->app
+        $configKeys = $this->config->getAllKeys();
+
+        // fixed overrides
+        $result = [
+            'appBase' => $this->base,
+            'request' => $request,
+            'appView' => $request->getPathInfo(),
+            'pageTemplate' => $this->config->get('templates')->page
         ];
+
+        foreach ($configKeys as $configKey) {
+            // skip private config values
+            if (strpos($configKey, '_') === 0) {
+                continue;
+            }
+
+            // skip overrides
+            if (isset($result[$configKey])) {
+                continue;
+            }
+
+            // add config entry
+            $result[$configKey] = $this->config->get($configKey);
+        }
+
+        // return as template-friendly array
+        return json_decode(json_encode($result), true);
     }
 
     /**
-     * Checks if the given request asks for a layout-free view partial or the whole page
+     * Checks if the given request asks for a layout-free response, or the whole page
      *
      * @param Request $request
      *
-     * @return bool TRUE for partials, FALSE for complete pages
+     * @return bool TRUE for content-only requests, FALSE for complete pages
      */
-    public function isPartialRequest($request = null)
+    public function isContentOnlyRequest($request = null)
     {
-        /* @var Request $request */
         if (null === $request) {
             $request = $this['request_stack']->getCurrentRequest();
         }
 
-        return ($request->query->get('partials') === 'true');
+        return ($request->query->get('phue-layout') === '0');
     }
 
 }

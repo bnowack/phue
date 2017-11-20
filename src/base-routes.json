@@ -1,4 +1,5 @@
 {
+  "defaultRouteCall": "Phue\\Application\\ApplicationController::handleTemplateRequest",
   "routes": {
   }
 }

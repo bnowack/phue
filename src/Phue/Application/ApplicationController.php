@@ -13,11 +13,6 @@ use Exception;
 class ApplicationController
 {
 
-    public function handleHelloWorld(Application $app)
-    {
-        return 'hello world';
-    }
-
     /**
      * Generates an error response
      *
@@ -47,48 +42,104 @@ class ApplicationController
             ]
         ];
 
-        // render template
-        $template = $app->config->get('templates')->error;
-        return $app->render($template, $params);
+        if ($app->isContentOnlyRequest()) {// render plain content only
+            $pageTemplate = $app->config->get('templates')->error;
+        } else {// render full page
+            $pageTemplate = $app->config->get('templates')->page;
+            $params['contentTemplate'] = $app->config->get('templates')->error;
+        }
+
+        // render view
+        return $app->render($pageTemplate, $params);
     }
 
     /**
      * Generates a content template response
      *
      * @param Application $app
-     * @param \stdClass $routeOptions The route definition as specified in the configuration file
+     * @param object $routeConfig The route definition as specified in the configuration file
      *
-     * @return Response A Response instance
+     * @return Response|string A Response instance
      */
-    public function handleTemplateRequest(Application $app, $routeOptions = null)
+    public function handleTemplateRequest(Application $app, $routeConfig = null)
     {
         // check role
-        if (!empty($routeOptions->role) && !$app['users']->hasRole($routeOptions->role)) {
-            $routeOptions->element = null;
-            $routeOptions->elementData = null;
-            if (!empty($app->config('accessDeniedContentTemplate'))) {
-                // render custom "access denied" content template
-                $routeOptions->contentTemplate = $app->config('accessDeniedContentTemplate');
-            } elseif (!empty($app->config('accessDeniedTemplate'))) {
-                // render custom "access denied" page template
-                $routeOptions->template = $app->config('accessDeniedTemplate');
-            } elseif (!empty($app->config('accessDeniedMessage'))) {
-                // render custom "access denied" error message
-                $app->abort(401, $app->config('accessDeniedMessage'));
-            } elseif (!empty($app->config('accessDeniedHref'))) {
-                // redirect denied user to custom URL
-                return $app->redirect($app->base . $app->config('accessDeniedHref'));
-            } else {
-                // render default error message
-                $app->abort(401, 'Access Denied');
-            }
+        if (!empty($routeConfig->role) && !$app['users']->hasRole($routeConfig->role)) {
+            return $this->handleAccessDenied($app, $routeConfig);
         }
 
-        $response = $app->render($routeOptions->template, $routeOptions);
+        // layout-less request
+        if ($app->isContentOnlyRequest()) {
+            return $this->handleLayoutLessTemplateRequest($app, $routeConfig);
+        };
+
+        // render full page
+        $pageTemplate = !empty($routeConfig->pageTemplate)
+            ? $routeConfig->pageTemplate
+            : $app->config->get('templates')->page;
+
+        $response = $app->render($pageTemplate, $routeConfig);
         // set content type
-        if (isset($routeOptions->contentType)) {
-            $response->headers->set('Content-Type', $routeOptions->contentType);
+        if (isset($routeConfig->contentType)) {
+            $response->headers->set('Content-Type', $routeConfig->contentType);
         }
+
         return $response;
+    }
+
+    protected function handleLayoutLessTemplateRequest(Application $app, $routeConfig)
+    {
+        // no content template => render plain content w/o any template
+        if (empty($routeConfig->contentTemplate)) {
+            return isset($routeConfig->content)
+                ? $routeConfig->content
+                : '';
+        }
+
+        // content template => render content template
+        return $app->render($routeConfig->contentTemplate, $routeConfig);
+    }
+
+    /**
+     * Handles "access denied" situations, depending on configuration
+     *
+     * @param Application $app
+     * @param $routeConfig
+     *
+     * @return mixed Response or RedirectResponse or void
+     */
+    protected function handleAccessDenied(Application $app, $routeConfig)
+    {
+        $routeConfig->element = null;
+        $routeConfig->elementData = null;
+
+        // render custom "access denied" content template if defined
+        $contentTemplate = $app->config->get('accessDeniedContentTemplate');
+        if (!empty($contentTemplate)) {
+            $routeConfig->contentTemplate = $contentTemplate;
+            return $app->render($routeConfig->pageTemplate, $routeConfig);
+        }
+
+        // render custom "access denied" page template
+        $pageTemplate = $app->config->get('accessDeniedPageTemplate');
+        if (!empty($pageTemplate)) {
+            $routeConfig->pageTemplate = $pageTemplate;
+            return $app->render($routeConfig->pageTemplate, $routeConfig);
+        }
+
+        // render custom "access denied" error message
+        $content = $app->config->get('accessDeniedMessage');
+        if (!empty($content)) {
+            return $app->abort(401, $content);
+        }
+
+        // redirect denied user to custom URL
+        $href = $app->config->get('accessDeniedHref');
+        if (!empty($href)) {
+            return $app->redirect($app->base . $app->config->get('accessDeniedHref'));
+        }
+
+        // render default error message
+        return $app->abort(401, 'Access Denied');
     }
 }
