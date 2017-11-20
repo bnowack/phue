@@ -1,5 +1,9 @@
 {
   "defaultRouteCall": "Phue\\Application\\ApplicationController::handleTemplateRequest",
   "routes": {
+    "/": {
+      "pageTitle": "Welcome",
+      "contentTemplate": "Phue/Application/doc/welcome.html.twig"
+    }
   }
 }
