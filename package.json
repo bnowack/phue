@@ -11,6 +11,7 @@
     "babel-loader": "^7.1.2",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "babel-preset-env": "^1.6.1",
+    "babel-regenerator-runtime": "^6.5.0",
     "chromedriver": "^2.33.1",
     "css-loader": "^0.28.7",
     "extract-text-webpack-plugin": "^3.0.2",
@@ -36,6 +37,7 @@
     "webpack-clean-obsolete-chunks": "^0.3.0"
   },
   "dependencies": {
-    "native-promise-only": "^0.8.1"
+    "native-promise-only": "^0.8.1",
+    "vue-material": "^1.0.0-beta-4"
   }
 }
