@@ -1,5 +1,8 @@
+let fs = require('fs-extra');
 let path = require('path');
 let CleanObsoleteChunks = require('webpack-clean-obsolete-chunks');
+
+fs.emptyDir('./dist');
 
 module.exports = {
     entry: {
