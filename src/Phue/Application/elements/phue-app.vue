@@ -16,7 +16,7 @@
         },
 
         mounted() {
-            this.extendEnvironment()
+            this.extendEnvironment();
             this.fadeIn();
         },
 
