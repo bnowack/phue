@@ -26,6 +26,7 @@
     "karma-jasmine": "*",
     "karma-junit-reporter": "^1.0.0",
     "karma-phantomjs-launcher": "^1.0.0",
+    "moment": "^2.19.2",
     "node-sass": "^4.6.1",
     "phantomjs-prebuilt": "^2.1.15",
     "sass-loader": "^6.0.6",
