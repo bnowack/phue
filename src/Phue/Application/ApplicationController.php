@@ -130,7 +130,7 @@ class ApplicationController
         // render custom "access denied" error message
         $content = $app->config->get('accessDeniedMessage');
         if (!empty($content)) {
-            return $app->abort(401, $content);
+            $app->abort(401, $content);
         }
 
         // redirect denied user to custom URL
@@ -140,6 +140,6 @@ class ApplicationController
         }
 
         // render default error message
-        return $app->abort(401, 'Access Denied');
+        $app->abort(401, 'Access Denied');
     }
 }

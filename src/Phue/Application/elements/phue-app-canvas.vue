@@ -5,11 +5,9 @@
 </template>
 
 <script>
-
-    module.exports = {
-        data: function () {
+    export default {
+        data() {
             return {
-
             }
         }
     }

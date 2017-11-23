@@ -3,7 +3,7 @@
   "routes": {
     "/": {
       "pageTitle": "Welcome",
-      "contentTemplate": "Phue/Application/doc/welcome.html.twig"
+      "contentTemplate": "Phue/Application/templates/welcome.html.twig"
     },
 
     "/manifest.json": {

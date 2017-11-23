@@ -15,6 +15,12 @@ $app-footer-bg-color: #333;
 // headings
 $app-heading-color: #333;
 
+
+// app-content()
+@mixin app-content() {
+  padding: 32px 0;
+}
+
 //max-width-container()
 @mixin max-width-container($max-width: $app-layout-width, $side-padding: 16px) {
   display: block;

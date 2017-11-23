@@ -17,6 +17,7 @@
     @import '../scss/_variables.scss';
 
     .phue-app-content{
+        @include app-content();
     }
 </style>
 
