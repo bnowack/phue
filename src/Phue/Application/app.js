@@ -2,7 +2,6 @@ import Vue from 'vue'
 import axios from 'axios'
 
 // enable selected vue-material elements
-import regeneratorRuntime from 'babel-regenerator-runtime'; // required for partial vue-material imports
 import { MdCard } from 'vue-material/dist/components';
 
 // define component bundles
