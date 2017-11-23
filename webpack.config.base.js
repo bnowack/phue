@@ -18,6 +18,9 @@ module.exports = {
         new CleanObsoleteChunks({verbose: false})
     ],
     module: {
+        noParse: [
+            /moment.js/ // avoid locales getting included
+        ],
         loaders: [
             {
                 test: /\.vue/,
