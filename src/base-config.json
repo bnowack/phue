@@ -9,7 +9,13 @@
     "users": { "driver": "pdo_sqlite" }
   },
   "_adminUser": "",
-  "autoCheckSchema": true,
+  "schema": {
+    "autoCheck": true,
+    "directories": [
+      "{PHUE_SRC_DIR}Phue/Schema/Changes",
+      "{PHUE_APP_DIR}config/schema-changes"
+    ]
+  },
   "meta": {
     "name": "Phue",
     "description": "A PHP micro-framework for applications driven by Vue.js",

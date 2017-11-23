@@ -5,16 +5,29 @@ namespace Phue\Application;
 use Exception;
 use Phue\Config\Config;
 use Phue\Config\ConfigProvider;
+use Phue\Database\DatabaseProvider;
+use Phue\Schema\SchemaProvider;
+use Phue\Security\SecurityProvider;
+use Phue\User\UserProvider;
 use Silex\Application as SilexApplication;
 use Silex\Application\TwigTrait;
+use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
  * Application class
  *
  * @property Config $config
+ * @property DatabaseProvider $database
+ * @property SchemaProvider $schema
+ * @property SecurityProvider $security
+ * @property UserProviderInterface|UserProvider $users
+ * @property Session $session
+ *
  * @property bool $debug
  */
 class Application extends SilexApplication
@@ -72,6 +85,18 @@ class Application extends SilexApplication
             ]
         ]);
         $this['twig.loader.filesystem']->addPath(PHUE_SRC_DIR);
+
+        // register DB service provider
+        $this->register(new DatabaseProvider('database'));
+
+        // register schema service provider
+        $this->register(new SchemaProvider('schema'));
+
+        // register session service provider
+        $this->register(new SessionServiceProvider());
+
+        // register security service provider
+        $this->register(new SecurityProvider('security'));
     }
 
     /**
@@ -86,8 +111,24 @@ class Application extends SilexApplication
         }
 
         parent::boot();
+
+        $this->initCustomServiceProviders();
         $this->initBase($request);
         $this->initRoutes();
+        if ($this->config->get('schema')->autoCheck) {
+            $this->schema->quickCheckSchema($this->providers);
+        }
+    }
+
+    /**
+     * Registers and boots any service providers defined in config
+     */
+    protected function initCustomServiceProviders()
+    {
+        foreach ($this->config->get('serviceProviders', []) as $serviceName => $providerClassName) {
+            $this->register(new $providerClassName($serviceName));
+            $this[$serviceName]->boot($this);
+        }
     }
 
     /**

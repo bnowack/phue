@@ -2,11 +2,11 @@
 
 namespace Phue\Application;
 
+use Phue\Application\Application as PhueApplication;
+use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Silex\Api\BootableProviderInterface;
-use Pimple\Container;
 use Silex\Application as SilexApplication;
-use Phue\Application\Application as PhueApplication;
 
 class ServiceProvider implements ServiceProviderInterface, BootableProviderInterface
 {
