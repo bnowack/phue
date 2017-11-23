@@ -6,7 +6,7 @@ fs.emptyDir('./dist');
 
 module.exports = {
     entry: {
-        app: './src/Phue/Application/app.js'
+        app: ['babel-regenerator-runtime', './src/Phue/Application/app.js']
     },
     output: {
         path: path.resolve(__dirname, './dist'),
