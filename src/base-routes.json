@@ -9,6 +9,12 @@
     "/manifest.json": {
       "pageTemplate": "Phue/Application/templates/manifest.json.twig",
       "contentType": "application/json"
+    },
+
+    "/phue/schema/changes": {
+      "pageTitle": "Schema Changes",
+      "heading": "Applied Schema Changes",
+      "call": "Phue\\Schema\\SchemaController::showSchemaChanges"
     }
   }
 }
