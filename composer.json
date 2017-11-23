@@ -53,6 +53,7 @@
     "php-specs": "phpspec --ansi -c=test/unit/phpspec/phpspec.yml",
     "js-tests": "karma start test/unit/js/karma.conf.js -- --tags @active",
     "build-dev": "webpack --watch --config webpack.config.dev.js --colors --progress --hide-modules || true",
+    "build-stats": "webpack --config webpack.config.prod.js --json > webpack-stats.json",
     "build-prod": "webpack --config webpack.config.prod.js --colors --progress --hide-modules || true"
   }
 }
