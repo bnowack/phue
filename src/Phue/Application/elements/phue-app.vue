@@ -6,6 +6,9 @@
 </template>
 
 <script>
+    import Vue from 'vue'
+    import axios from 'axios'
+
     export default {
         data: function () {
             return {
@@ -25,6 +28,14 @@
                 // add forEach method to NodeLists and HTMLCollections (lacks in PhantomJS)
                 NodeList.prototype.forEach = Array.prototype.forEach;
                 HTMLCollection.prototype.forEach = Array.prototype.forEach;
+                // activate axios
+                Vue.http = axios.create({
+                    baseURL: window.phue.appBase,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-Content-Only': 1
+                    }
+                });
             },
 
             /**

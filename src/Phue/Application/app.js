@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import axios from 'axios'
 
 // enable selected vue-material elements
 import { MdCard } from 'vue-material/dist/components';
@@ -16,15 +15,5 @@ new Vue({
     el: '#app-container',
     created() {
         Vue.use(MdCard);
-    },
-    mounted() {
-        // activate axios
-        Vue.http = axios.create({
-            baseURL: window.phue.appBase,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-Partial': 1
-            }
-        });
     }
 });

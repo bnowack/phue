@@ -313,7 +313,8 @@ class Application extends SilexApplication
             $request = $this['request_stack']->getCurrentRequest();
         }
 
-        return ($request->query->get('phue-layout') === '0');
+        return ($request->headers->get('X-Content-Only') === '1')
+            || ($request->query->get('content-only') === '1');
     }
 
 }
