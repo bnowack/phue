@@ -49,7 +49,6 @@
 </script>
 
 <style src="../scss/app-theme.scss" lang="scss"></style>
-<style src="../../../../node_modules/vue-material/dist/vue-material.min.css" lang="css"></style>
 <style lang="scss" scoped>
     @import '../scss/_variables.scss';
 
