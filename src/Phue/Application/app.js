@@ -15,6 +15,8 @@ Vue.component('phue-app-footer', () => import(/* webpackChunkName: "phue" */ './
 Vue.component('phue-app-header', () => import(/* webpackChunkName: "phue" */ './elements/phue-app-header.vue'));
 Vue.component('phue-schema-changes', () => import(/* webpackChunkName: "phue" */ '../Schema/elements/phue-schema-changes.vue'));
 
-window.phue.vue = new Vue({
-    el: '#app-container'
+// delay instance creation so that lazy-loaded components get a tad more time
+Vue.nextTick(() => {
+    window.phue.vue = new Vue({
+        el: '#app-container'
 });
