@@ -10,7 +10,7 @@
     import axios from 'axios'
 
     export default {
-        data: function () {
+        data() {
             return {
             }
         },
@@ -20,15 +20,23 @@
 
         mounted() {
             this.extendEnvironment();
+            this.activateAxios();
             this.fadeIn();
         },
 
         methods: {
+            /**
+             * Adds forEach method to NodeLists and HTMLCollections (lacks in PhantomJS)
+             */
             extendEnvironment() {
-                // add forEach method to NodeLists and HTMLCollections (lacks in PhantomJS)
                 NodeList.prototype.forEach = Array.prototype.forEach;
                 HTMLCollection.prototype.forEach = Array.prototype.forEach;
-                // activate axios
+            },
+
+            /**
+             * Activates axios for API calls
+             */
+            activateAxios() {
                 Vue.http = axios.create({
                     baseURL: window.phue.appBase,
                     headers: {
