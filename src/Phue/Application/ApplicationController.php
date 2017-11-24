@@ -96,8 +96,15 @@ class ApplicationController
                 : '';
         }
 
-        // content template => render content template
-        return $app->render($routeConfig->contentTemplate, $routeConfig);
+        // content template => render content template as page template
+        $pageTemplate = $routeConfig->contentTemplate;
+        $routeConfig->contentTemplate = null;
+        $response = $app->render($pageTemplate, $routeConfig);
+
+        // inject page title
+        $response->headers->set('X-Page-Title', $routeConfig->pageTitle);
+
+        return $response;
     }
 
     /**

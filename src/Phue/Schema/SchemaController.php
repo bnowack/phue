@@ -3,13 +3,14 @@
 namespace Phue\Schema;
 
 use Phue\Application\Application;
+use Phue\Application\ApplicationController;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Phue Schema Controller
  *
  */
-class SchemaController
+class SchemaController extends ApplicationController
 {
 
     /**
@@ -31,6 +32,6 @@ class SchemaController
             'heading' => $routeConfig->heading,
             'changes' => $appliedChanges
         ];
-        return $app->render($routeConfig->pageTemplate, $routeConfig);
+        return $this->handleTemplateRequest($app, $routeConfig);
     }
 }
