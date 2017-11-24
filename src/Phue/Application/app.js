@@ -1,5 +1,9 @@
 import Vue from 'vue'
 
+// activate router
+import VueRouter from 'vue-router'
+Vue.use(VueRouter);
+
 // enable vue-material components
 import(/* webpackChunkName: "md" */'vue-material/dist/components/MdCard').then(cmp => { Vue.use(cmp.default)});
 import(/* webpackChunkName: "md" */'vue-material/dist/components/MdList').then(cmp => { Vue.use(cmp.default)});
@@ -18,5 +22,9 @@ Vue.component('phue-schema-changes', () => import(/* webpackChunkName: "phue" */
 // delay instance creation so that lazy-loaded components get a tad more time
 Vue.nextTick(() => {
     window.phue.vue = new Vue({
-        el: '#app-container'
+        el: '#app-container',
+        router: new VueRouter({
+            mode: 'history'
+        })
+    });
 });
