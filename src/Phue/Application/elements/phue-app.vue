@@ -74,7 +74,7 @@
                 let $title = document.querySelector('title');
                 let title = response.headers['x-page-title'] || $title.innerText;
                 let titleSuffix = $title.getAttribute('data-suffix') || '';
-                $title.innerText = `${title}${titleSuffix}`;
+                $title.innerText = `${title.replace(titleSuffix, '')}${titleSuffix}`;
 
                 // replace content area with dynamic component
                 let Component = Vue.extend({
