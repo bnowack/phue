@@ -166,9 +166,16 @@ class Application extends SilexApplication
     {
         $routes = $this->config->get('routes', array());
         foreach ($routes as $path => $routeConfig) {
+            // extract method restriction, e.g. from `GET|POST /path`
+            $method = null;
+            if (preg_match('/^(.+) (.+)$/', $path, $pathMatch)) {
+                $method = $pathMatch[1];
+                $path = $pathMatch[2];
+            }
+
             $pathWithBase = $this->base . ltrim($path, '/');
             if (is_string($routeConfig)) {// routeOptions is a `Class::method` string
-                $this->match($pathWithBase, $routeConfig);
+                $controller = $this->match($pathWithBase, $routeConfig);
             } else {// routeOptions is an object (and should have a 'call' property)
                 // set default call
                 if (empty($routeConfig->call)) {
@@ -185,6 +192,10 @@ class Application extends SilexApplication
 
                 // make route config available as controller call parameter
                 $controller->value('routeConfig', $routeConfig);
+            }
+
+            if ($method) {
+                $controller->method($method);
             }
         }
     }
