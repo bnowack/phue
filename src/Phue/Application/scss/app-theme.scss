@@ -8,6 +8,10 @@ html, body, #app-container {
   transition: opacity 0.5s;
 }
 
+a {
+  cursor: pointer;
+}
+
 /* fade-transition */
 
 .fade-enter-active, .fade-leave-active {
