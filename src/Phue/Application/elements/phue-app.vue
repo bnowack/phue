@@ -38,7 +38,7 @@
              * Activates axios for API calls
              */
             activateAxios() {
-                Vue.http = axios.create({
+                window.phue.http = axios.create({
                     baseURL: window.phue.appBase,
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest',
@@ -63,7 +63,7 @@
                 let $oldContent = document.querySelector('.phue-app-content');
                 $oldContent.classList.add('outdated');
                 // load new content
-                Vue.http.get(to.fullPath).then(this.renderContent);
+                phue.http.get(to.fullPath).then(this.renderContent);
             },
 
             /**
