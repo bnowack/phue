@@ -76,6 +76,9 @@
                 let titleSuffix = $title.getAttribute('data-suffix') || '';
                 $title.innerText = `${title.replace(titleSuffix, '')}${titleSuffix}`;
 
+                // update appView
+                phue.appView = response.headers['x-app-view'];
+
                 // replace content area with dynamic component
                 let Component = Vue.extend({
                     template: `

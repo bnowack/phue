@@ -2,6 +2,7 @@
 
 namespace Phue\Application;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Debug\Exception\FlattenException;
 use Exception;
@@ -69,8 +70,9 @@ class ApplicationController
         }
 
         // layout-less request
-        if ($app->isContentOnlyRequest()) {
-            return $this->handleLayoutLessTemplateRequest($app, $routeConfig);
+        $request = $app['request_stack']->getCurrentRequest();
+        if ($app->isContentOnlyRequest($request)) {
+            return $this->handleLayoutLessTemplateRequest($app, $request, $routeConfig);
         };
 
         // render full page
@@ -87,7 +89,7 @@ class ApplicationController
         return $response;
     }
 
-    protected function handleLayoutLessTemplateRequest(Application $app, $routeConfig)
+    protected function handleLayoutLessTemplateRequest(Application $app, Request $request, $routeConfig)
     {
         // no content template => render plain content w/o any template
         if (empty($routeConfig->contentTemplate)) {
@@ -103,6 +105,7 @@ class ApplicationController
 
         // inject page title
         $response->headers->set('X-Page-Title', $routeConfig->pageTitle);
+        $response->headers->set('X-App-View', $request->getPathInfo());
 
         return $response;
     }
