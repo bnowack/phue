@@ -84,7 +84,11 @@
         // load app script
         let script = document.createElement('script');
         script.type = 'text/javascript';
-        script.src = '{{ appScript }}?{{ appVersion }}';
+
+        {% if debug %}script.src = '{{ appScript }}?' + Math.random();
+        {% else %}script.src = '{{ appScript }}?{{ appVersion }}';
+        {% endif %}
+
         document.head.appendChild(script);
 
         {% endblock %}

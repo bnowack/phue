@@ -286,6 +286,7 @@ class Application extends SilexApplication
 
         // fixed overrides
         $result = [
+            'debug' => $this->debug,
             'appBase' => $this->base,
             'request' => $request,
             'appView' => $request->getPathInfo(),
