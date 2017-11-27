@@ -11,8 +11,8 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, './dist'),
         publicPath: 'dist/',
-        filename: '[name]-bundle.js',
-        chunkFilename: '[name]-bundle.[chunkhash:4].js'
+        filename: '[name]-bundle.js?[chunkhash:4]',
+        chunkFilename: '[name]-bundle.js?[chunkhash:4]'
     },
     plugins: [
         new CleanObsoleteChunks({verbose: false})
