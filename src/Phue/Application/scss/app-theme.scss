@@ -1,4 +1,13 @@
 
+@import "~vue-material/dist/theme/engine"; // Import the theme engine
+@include md-register-theme("default", (
+    primary: #4DBA87,
+    accent: #333,
+    theme: light
+));
+@import "~vue-material/dist/theme/all";
+
+
 @font-face {
   font-family: 'Open Sans Light';
   src: local('Open Sans Light'), url("../fonts/OpenSans/OpenSans-Light-webfont.woff") format('woff');
