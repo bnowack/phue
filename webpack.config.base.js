@@ -41,7 +41,7 @@ module.exports = {
                 loader: 'css-loader'
             },
             {
-                test: /\.(png|jpg|gif|svg)$/,
+                test: /\.(png|jpg|gif|svg|woff)$/,
                 loader: 'file-loader',
                 options: {
                     name: '[path][name].[ext]?[hash:4]',

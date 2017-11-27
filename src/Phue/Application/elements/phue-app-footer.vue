@@ -31,8 +31,9 @@
         bottom: 0;
         line-height: $app-footer-height;
         background: $app-footer-bg-color;
-        color: #666;
+        color: #999;
         font-size: 14px;
+        font-family: "Open Sans Semibold", sans-serif;
         text-align: right;
         margin-top: 20px;
     }
@@ -43,7 +44,7 @@
 
     a {
         text-decoration: none;
-        color: #999;
+        color: #bbb !important;
     }
 
     .version {

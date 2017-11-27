@@ -6,7 +6,9 @@ $app-error-color: #c00;
 $app-success-color: #090;
 $app-text-color: #444;
 $app-link-color: #209cea;
-$app-font-family: sans-serif;
+$app-font-family: "Open Sans Light", sans-serif;
+$app-sys-nav-font: "Open Sans Semibold", sans-serif;
+$app-card-header-font: "Open Sans Semibold", sans-serif;
 
 // footer
 $app-footer-height: 40px;
@@ -32,7 +34,7 @@ $app-heading-color: #333;
 
 // sys-nav()
 @mixin sys-nav() {
-  font-family: sans-serif;
+  font-family: $app-sys-nav-font;
   text-align: left;
 
   a.toggle, a.login {
