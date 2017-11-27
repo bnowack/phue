@@ -2,8 +2,9 @@
 // app
 $app-layout-width: 1040px;
 $app-bg-color: #fff;
-$app-error-color: #c00;
+$app-error-color: #ff1744;
 $app-success-color: #090;
+$app-text-color: #444;
 $app-text-color: #444;
 $app-link-color: #209cea;
 $app-font-family: "Open Sans Light", sans-serif;
@@ -15,15 +16,18 @@ $app-footer-height: 40px;
 $app-footer-bg-color: #333;
 
 // headings
+$app-header-height: 40px;
 $app-heading-color: #333;
 
+// titled card
+$titled-card-header-bg-color: #f9f9f9;
 
 // app-content()
 @mixin app-content() {
   padding: 32px 0;
 }
 
-//max-width-container()
+// max-width-container()
 @mixin max-width-container($max-width: $app-layout-width, $side-padding: 16px) {
   display: block;
   max-width: $max-width;
@@ -32,12 +36,34 @@ $app-heading-color: #333;
   padding-right: $side-padding;
 }
 
+// clear-fix()
+@mixin clear-fix() {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+// titled-card()
+@mixin titled-card() {
+  .md-card-header {
+    background-color: $titled-card-header-bg-color;
+    padding: 2px 16px 2px;
+
+    .md-title {
+      font-size: 18px;
+      line-height: 40px;
+      margin: 0;
+      text-transform: uppercase;
+    font-family: $app-card-header-font;
+    }
+  }
+}
+
 // sys-nav()
 @mixin sys-nav() {
   font-family: $app-sys-nav-font;
   text-align: left;
-
-  a.toggle, a.login {
-    font-family: sans-serif;
-  }
 }
+
