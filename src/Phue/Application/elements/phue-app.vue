@@ -8,6 +8,7 @@
 <script>
     import Vue from 'vue'
     import axios from 'axios'
+    import qs from 'qs'
 
     export default {
         data() {
@@ -45,6 +46,17 @@
                         'X-Content-Only': 1
                     }
                 });
+                window.phue.http.postForm = function(url, data) {
+                    return window.phue.http.post(
+                        url,
+                        qs.stringify(data),
+                        {
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            }
+                        }
+                    )
+                }
             },
 
             /**
