@@ -1,7 +1,7 @@
 <template>
     <header class="phue-app-header">
         <div>
-            <a :href="base"></a>
+            <router-link :to="base"></router-link>
         </div>
     </header>
 </template>
@@ -25,24 +25,25 @@
 <style lang="scss" scoped>
     @import '../scss/_variables.scss';
 
-    header {
+    .phue-app-header {
         display: block;
-        height: 40px;
+        height: $app-header-height;
         background: #fff;
         box-shadow: 0 1px 2px rgba(0,0,0,0.15);
-    }
 
-    header > div {
-        @include max-width-container();
-        position: relative;
-    }
+        > div {
+            @include max-width-container();
+            position: relative;
+            height: $app-header-height;
 
-    a {
-        display: inline-block;
-        height: 40px;
-        width: 40px;
-        background: transparent url("../img/favicon.png") center no-repeat;
-        background-size: 32px 32px;
+            a {
+                display: inline-block;
+                height: $app-header-height;
+                width: 40px;
+                background: transparent url("../img/favicon.png") center no-repeat;
+                background-size: 32px 32px;
+            }
+
     }
 </style>
 
