@@ -24,6 +24,7 @@ Vue.component('phue-app-footer', () => import(/* webpackChunkName: "phue" */ './
 Vue.component('phue-app-header', () => import(/* webpackChunkName: "phue" */ './elements/phue-app-header.vue'));
 Vue.component('phue-schema-changes', () => import(/* webpackChunkName: "phue" */ '../Schema/elements/phue-schema-changes.vue'));
 Vue.component('phue-login', () => import(/* webpackChunkName: "security" */ '../Security/elements/phue-login.vue'));
+Vue.component('phue-logout-link', () => import(/* webpackChunkName: "security" */ '../Security/elements/phue-logout-link.vue'));
 
 // delay instance creation so that lazy-loaded components get a tad more time
 Vue.nextTick(() => {

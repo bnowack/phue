@@ -46,6 +46,11 @@
       "errorText": "Wrong username or password. Please try again.",
       "successText": "Login successful",
       "successHref": "/"
+    },
+
+    "POST /phue/account/logout": {
+      "call": "Phue\\Security\\LogoutController::handleLogoutRequest",
+      "successHref": "/"
     }
   }
 }
