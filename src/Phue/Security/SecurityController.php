@@ -27,6 +27,13 @@ class SecurityController
         $response = clone $routeConfig;
         $response->username = $user->getUsername();
         $response->roles = $user->getRoles();
+        // render sys nav menu snippet
+        $routeConfig->logoutToken = $app->security->getToken('logout')->getValue();
+        $response->sysNavMenu= $app['twig']->render(
+            $routeConfig->sysNavMenuTemplate,
+            $app->getMergedTemplateParameters((array)$routeConfig)
+        );
+
         return new JsonResponse($response);
     }
 }

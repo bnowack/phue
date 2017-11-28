@@ -13,6 +13,7 @@ import(/* webpackChunkName: "md" */'vue-material/dist/components/MdButton').then
 import(/* webpackChunkName: "md" */'vue-material/dist/components/MdField').then(cmp => { Vue.use(cmp.default)});
 import(/* webpackChunkName: "md" */'vue-material/dist/components/MdSnackbar').then(cmp => { Vue.use(cmp.default)});
 import(/* webpackChunkName: "md" */'vue-material/dist/components/MdProgress').then(cmp => { Vue.use(cmp.default)});
+import(/* webpackChunkName: "md" */'vue-material/dist/components/MdMenu').then(cmp => { Vue.use(cmp.default)});
 
 // enable phue components
 Vue.component('phue-app', () => import(/* webpackChunkName: "phue" */ './elements/phue-app.vue'));

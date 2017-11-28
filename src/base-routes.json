@@ -20,7 +20,12 @@
     "/phue/account.json": {
       "call": "Phue\\Security\\SecurityController::showAccountInfo",
       "loginLabel": "Sign in",
-      "loginHref": "/phue/account/login"
+      "loginHref": "/phue/account/login",
+      "sysNavMenuTemplate": "Phue/Application/templates/sys-nav-menu.html.twig",
+      "logoutHref": "/phue/account/logout",
+      "logoutLabel": "Sign out",
+      "passwordHref": "/phue/account/password",
+      "passwordLabel": "Change your password"
     },
 
     "GET /phue/account/login": {
