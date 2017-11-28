@@ -131,11 +131,6 @@ class CoreContext extends RawMinkContext implements Context
         return null;
     }
 
-    public function isJson($value)
-    {
-        return !!preg_match('/^[\/\{\[]/', $value);
-    }
-
     /**
      * Extracts custom settings (e.g. credentials) from behat.yml
      *

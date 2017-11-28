@@ -21,4 +21,27 @@ class PhueContext extends CoreContext implements Context
     {
         $this->getSession()->reset();
     }
+
+    /**
+     * @Then the response should be valid JSON
+     */
+    public function assertResponseIsJson()
+    {
+        $content = $this->getSession()->getPage()->getContent();
+        Assert::assertJson($content);
+    }
+
+    /**
+     * @When I click on the header logo
+     */
+    public function clickOnTheHeaderLogo()
+    {
+        $minkContext = $this->contexts->minkContext;/** @var MinkContext $minkContext */
+
+        $linkSelector = '.phue-app-header a.home-link';
+
+        $this->getSession()->wait(2000, "document.querySelector('$linkSelector')");
+
+        $minkContext->getSession()->getPage()->find('css', $linkSelector)->click();
+    }
 }

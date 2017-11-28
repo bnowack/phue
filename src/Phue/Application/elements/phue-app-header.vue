@@ -2,7 +2,7 @@
     <header class="phue-app-header">
         <div>
             <phue-app-sys-nav></phue-app-sys-nav>
-            <router-link :to="base"></router-link>
+            <router-link :to="base" class="home-link"></router-link>
         </div>
     </header>
 </template>
