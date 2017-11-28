@@ -94,10 +94,7 @@
                 let successUrl = phue.appBase + this.apiResponse.successHref.replace(/^\/+/, '');
                 setTimeout(function () {
                     window.location.href = successUrl;
-                }, 2000);
-            },
-            setTypeText() {
-                console.log('text')
+                }, 1500);
             }
         }
     }

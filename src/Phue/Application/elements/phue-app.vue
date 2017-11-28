@@ -63,8 +63,7 @@
              * Catches any route changes
              */
             activateRoutes() {
-                let router = window.phue.vue.$options.router;
-                router.afterEach(this.onRouteChange);
+                this.$router.afterEach(this.onRouteChange);
             },
 
             /**
