@@ -15,6 +15,12 @@
       "pageTitle": "Schema Changes",
       "heading": "Applied Schema Changes",
       "call": "Phue\\Schema\\SchemaController::showSchemaChanges"
+    },
+
+    "/phue/account.json": {
+      "call": "Phue\\Security\\SecurityController::showAccountInfo",
+      "loginLabel": "Sign in",
+      "loginHref": "/phue/account/login"
     }
   }
 }

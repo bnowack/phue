@@ -61,9 +61,8 @@ $titled-card-header-bg-color: #f9f9f9;
   }
 }
 
-// sys-nav()
-@mixin sys-nav() {
+// app-sys-nav()
+@mixin app-sys-nav() {
   font-family: $app-sys-nav-font;
   text-align: left;
 }
-

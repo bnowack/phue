@@ -1,6 +1,7 @@
 <template>
     <header class="phue-app-header">
         <div>
+            <phue-app-sys-nav></phue-app-sys-nav>
             <router-link :to="base"></router-link>
         </div>
     </header>
@@ -8,16 +9,13 @@
 
 <script>
     import Vue from 'vue'
+    Vue.component('phue-app-sys-nav', () => import(/* webpackChunkName: "phue" */ './phue-app-sys-nav.vue'));
 
     export default {
         data() {
             return {
-                base: '/'
+                base: phue.appBase
             }
-        },
-
-        created() {
-            this.base = window.phue.appBase;
         }
     }
 </script>
@@ -44,6 +42,11 @@
                 background-size: 32px 32px;
             }
 
+            .phue-app-sys-nav {
+                position: absolute;
+                right: 16px;
+                height: $app-header-height;
+            }
+        }
     }
 </style>
-
