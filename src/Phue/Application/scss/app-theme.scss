@@ -46,6 +46,11 @@ a {
   cursor: pointer;
 }
 
+button, .md-button {
+  font-family: "Open Sans Semibold", sans-serif;
+  font-weight: 600;
+}
+
 /* fade-transition */
 
 .fade-enter-active, .fade-leave-active {

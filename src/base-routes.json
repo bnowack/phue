@@ -21,6 +21,26 @@
       "call": "Phue\\Security\\SecurityController::showAccountInfo",
       "loginLabel": "Sign in",
       "loginHref": "/phue/account/login"
+    },
+
+    "GET /phue/account/login": {
+      "call": "Phue\\Security\\LoginController::showLoginForm",
+      "pageTitle": "Sign in",
+      "element": "phue-login",
+      "elementData": {
+        "heading": "Sign in",
+        "usernameLabel": "Username",
+        "passwordLabel": "Password",
+        "buttonLabel": "Sign in",
+        "loginHref": "/phue/account/login"
+      }
+    },
+
+    "POST /phue/account/login": {
+      "call": "Phue\\Security\\LoginController::handleLoginRequest",
+      "errorText": "Wrong username or password. Please try again.",
+      "successText": "Login successful",
+      "successHref": "/"
     }
   }
 }
