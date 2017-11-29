@@ -1,6 +1,6 @@
 <template>
     <form @submit="onSubmit" method="POST" action="">
-        <md-card class="phue-login">
+        <md-card class="phue-login-form">
             <md-card-header>
                 <div class="md-title">{{ heading }}</div>
             </md-card-header>
@@ -43,7 +43,6 @@
         props: [
             'heading',
             'token',
-            'loginHref',
             'usernameLabel',
             'passwordLabel',
             'buttonLabel'
@@ -80,7 +79,7 @@
             signIn() {
                 this.sending = true;
                 let http = phue.http;
-                http.postForm(this.loginHref, this.formData).then(response => {
+                http.postForm(location.href, this.formData).then(response => {
                     this.apiResponse = response.data;
                     if (response.data.success) {
                         this.onLogin();
@@ -103,7 +102,7 @@
 <style lang="scss" scoped>
     @import '../../Application/scss/_variables.scss';
 
-    .phue-login {
+    .phue-login-form {
         @include max-width-container($app-layout-width / 2, 0);
         @include titled-card();
 

@@ -31,13 +31,12 @@
     "GET /phue/account/login": {
       "call": "Phue\\Security\\LoginController::showLoginForm",
       "pageTitle": "Sign in",
-      "element": "phue-login",
+      "element": "phue-login-form",
       "elementData": {
         "heading": "Sign in",
         "usernameLabel": "Username",
         "passwordLabel": "Password",
-        "buttonLabel": "Sign in",
-        "loginHref": "/phue/account/login"
+        "buttonLabel": "Sign in"
       }
     },
 
