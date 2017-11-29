@@ -51,15 +51,15 @@
             return {
                 formData: {
                     token: this.token,
-                    username: null,
-                    password: null
+                    username: '',
+                    password: ''
                 },
                 sending: false,
                 apiResponse: {
                     success: null,
-                    message: null,
-                    errorField: null,
-                    successHref: null
+                    message: '',
+                    errorField: '',
+                    successHref: ''
                 }
             }
         },
@@ -78,17 +78,16 @@
             },
             signIn() {
                 this.sending = true;
-                let http = phue.http;
-                http.postForm(location.href, this.formData).then(response => {
+                phue.http.postForm(location.href, this.formData).then(response => {
                     this.apiResponse = response.data;
                     if (response.data.success) {
-                        this.onLogin();
+                        this.onSuccess();
                     } else {
                         this.sending = false;
                     }
                 });
             },
-            onLogin() {
+            onSuccess() {
                 // do a page redirect as the layout may change for logged-in users (and for Chrome to save passwords)
                 let successUrl = phue.appBase + this.apiResponse.successHref.replace(/^\/+/, '');
                 setTimeout(function () {
