@@ -102,32 +102,7 @@
     @import '../../Application/scss/_variables.scss';
 
     .phue-login-form {
-        @include max-width-container($app-layout-width / 2, 0);
-        @include titled-card();
-
-        .md-card-content {
-            padding-top: 16px;
-            padding-bottom: 16px;
-        }
-
-        .md-card-actions > .message {
-            position: absolute;
-            left: 0;
-            padding-left: 16px;
-            display: none;
-
-            &.active {
-                display: block;
-            }
-
-            &.md-error {
-                color: $app-error-color;
-            }
-
-            &.success {
-                color: $app-success-color;
-            }
-        }
+        @include single-form-view();
     }
 </style>
 
