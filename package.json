@@ -1,5 +1,6 @@
 {
   "name": "phue-dev-tools",
+  "version": "0.1.0",
   "description": "Dev tools for Phue",
   "scripts": {
     "install-fresh": "rm -rf ./node_modules && npm install -o"
