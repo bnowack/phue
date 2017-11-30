@@ -8,9 +8,6 @@
 </template>
 
 <script>
-    import Vue from 'vue'
-    Vue.component('phue-app-sys-nav', () => import(/* webpackChunkName: "phue" */ './phue-app-sys-nav.vue'));
-
     export default {
         data() {
             return {
