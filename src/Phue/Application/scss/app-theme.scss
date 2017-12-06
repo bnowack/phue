@@ -42,6 +42,10 @@ html, body, #app-container {
   transition: opacity 0.5s;
 }
 
+body {
+  background-color: #fff;
+}
+
 a {
   cursor: pointer;
 }
