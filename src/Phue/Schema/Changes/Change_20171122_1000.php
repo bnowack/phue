@@ -4,7 +4,6 @@ namespace Phue\Schema\Changes;
 
 use Exception;
 use Phue\Schema\SchemaChange;
-use Phue\User\UserProvider;
 use Phue\User\User;
 
 class Change_20171122_1000 extends SchemaChange
