@@ -3,7 +3,6 @@
     "/test-base/",
     "/"
   ],
-  "appScript": "dist/app-bundle.js",
   "phueSrcPath": "src/",
   "_dataDirectory": "dev/data",
   "_adminUser": "admin",
