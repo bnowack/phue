@@ -140,26 +140,46 @@ trait DatabaseServiceProviderTrait
      */
     protected function decodeTableValue($row, $field, $type = 'string')
     {
-        if (!isset($row[$field])) {
-            return null;
-        }
-
         // return instance if $type is a class name
         if (class_exists($type, true)) {
-            return new $type(json_decode($row[$field]));
+            return $this->decodeInstanceTableValue($row, $field, $type);
         }
 
+        // extract default value
+        $value = isset($row[$field])
+            ? $row[$field]
+            : null;
+
+        // process value
         switch ($type) {
             case 'int':
-                return intval($row[$field]);
+                return intval($value);
             case 'bool':
-                return (intval($row[$field]) === 1);
+                return (intval($value) === 1);
             case 'array':
-                return json_decode($row[$field], true);
+                return json_decode($value, true) ?: [];
             case 'object':
-                return json_decode($row[$field]);
+                return json_decode($value) ?: (object)[];
             default:
-                return $row[$field];
+                return $value;
         }
+    }
+
+    /**
+     * Converts a single database table value to an object instance
+     *
+     * @param array $row
+     * @param string $field Field name
+     * @param string $className
+     *
+     * @return object
+     */
+    protected function decodeInstanceTableValue($row, $field, $className)
+    {
+        $data = isset($row[$field])
+            ? json_decode($row[$field])
+            : [];
+
+        return new $className($data);
     }
 }
