@@ -51,7 +51,7 @@ class ConfigProvider extends ServiceProvider
             'icons',
             'templates',
             'routes',
-            'dbs'
+            '_databases'
         );
 
         /* @var Config $config */
