@@ -10,7 +10,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\HttpFoundation\Session\Session;
-use \Doctrine\DBAL\Driver\Statement;
+use Doctrine\DBAL\Driver\Statement;
+use Exception;
 
 class UserProvider extends ServiceProvider implements UserProviderInterface
 {
@@ -18,6 +19,7 @@ class UserProvider extends ServiceProvider implements UserProviderInterface
 
     protected $tableDefinitions = [
         'User' => [
+            'userId' => 'int',
             'username' => 'string',
             'password' => 'string',
             'roles' => 'array',
@@ -44,6 +46,39 @@ class UserProvider extends ServiceProvider implements UserProviderInterface
     /**
      * Loads a user from the database
      *
+     * @param int $userId
+     *
+     * @return User User object
+     *
+     * @throws Exception when user id cannot be found
+     */
+    public function loadUser($userId)
+    {
+        /** @noinspection SqlResolve */
+        $row = $this->getConnection('users')->fetchAssoc(
+            'SELECT * FROM User WHERE userId = ?',
+            [$userId]
+        );
+
+        if (!$row) {
+            throw new Exception(sprintf('User ID "%s" does not exist.', $userId));
+        }
+
+        return new User(
+            $row['userId'],
+            $row['username'],
+            $row['password'],
+            explode(',', $row['roles']),
+            $row['enabled'],
+            $row['expired'],
+            $row['credentialsExpired'],
+            $row['locked']
+        );
+    }
+
+    /**
+     * Loads a user from the database
+     *
      * @param string $username
      * @return User User object
      */
@@ -60,6 +95,7 @@ class UserProvider extends ServiceProvider implements UserProviderInterface
         }
 
         return new User(
+            $row['userId'],
             $row['username'],
             $row['password'],
             explode(',', $row['roles']),
@@ -134,7 +170,7 @@ class UserProvider extends ServiceProvider implements UserProviderInterface
         // return user or guest user
         return $this->currentUser
             ? $this->currentUser
-            : new User('guest', '', ['guest'], true, false, false, false);
+            : new User(null, 'guest', '', ['guest'], true, false, false, false);
     }
 
     /**
@@ -249,19 +285,29 @@ class UserProvider extends ServiceProvider implements UserProviderInterface
 
     /**
      * Inserts or replaces a user in the database
+     *
      * @param User $user
      *
      * @return Statement|int
      */
     public function saveUser(User $user)
     {
+        $conn = $this->getConnection('users');
+        $data = $this->buildTableValues($user);
+
+        // INSERT if user is new
         if (!$this->usernameExists($user->getUsername())) {
-            return $this->getConnection('users')->insert('User', $this->buildTableValues($user));
-        } else {
-            return $this->getConnection('users')->update('User', $this->buildTableValues($user), [
-                'username' => strtolower($user->getUsername())
-            ]);
+            $conn->beginTransaction();
+            $affectedRows = $conn->insert('User', $data);
+            // use newly generated rowId as userId
+            $userId = $conn->lastInsertId();
+            $conn->update('User', ['userId' => $userId], ['rowId' => $userId]);
+            $conn->commit();
+            return $affectedRows;
         }
+
+        // UPDATE if user is known
+        return $conn->update('User', $data, ['userId' => $user->getUserId()]);
     }
 
     /**
@@ -274,6 +320,7 @@ class UserProvider extends ServiceProvider implements UserProviderInterface
     protected function buildTableValues(User $user)
     {
         return [
+            'userId' => $user->getUserId(),
             'username' => strtolower($user->getUsername()),
             'password' => $user->getPassword(),
             'roles' => join(',', $user->getRoles()),

@@ -55,6 +55,7 @@ class Change_20171122_1000 extends SchemaChange
     {
         $sql = '
           CREATE TABLE IF NOT EXISTS `User` (
+            `userId` INTEGER UNIQUE,
             `username` TEXT UNIQUE NOT NULL,
             `password` TEXT,
             `roles` TEXT,
@@ -76,7 +77,7 @@ class Change_20171122_1000 extends SchemaChange
     {
         // create user account with empty password
         $adminUserName = $this->app->config->get('_adminUser');
-        $user = new User($adminUserName, $this->app->users->encodePassword(''), ['admin']);
+        $user = new User(null, $adminUserName, $this->app->users->encodePassword(''), ['admin']);
         return $this->app->users->saveUser($user);
     }
 

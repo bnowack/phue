@@ -9,6 +9,7 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  */
 class User implements AdvancedUserInterface
 {
+    private $userId;
     private $username;
     private $password;
     private $roles;
@@ -18,6 +19,7 @@ class User implements AdvancedUserInterface
     private $locked;
 
     public function __construct(
+        $userId,
         $username,
         $password,
         array $roles = array(),
@@ -30,6 +32,7 @@ class User implements AdvancedUserInterface
             throw new \InvalidArgumentException('The username cannot be empty.');
         }
 
+        $this->userId = $userId;
         $this->username = $username;
         $this->password = $password;
         $this->roles = $roles;
@@ -65,6 +68,16 @@ class User implements AdvancedUserInterface
      */
     public function getSalt()
     {
+    }
+
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    public function setUserId($userId)
+    {
+        $this->userId = $userId;
     }
 
     /**
