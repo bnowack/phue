@@ -2,9 +2,6 @@
   "name": "phue-dev-tools",
   "version": "0.1.4",
   "description": "Dev tools for Phue",
-  "scripts": {
-    "install-fresh": "rm -rf ./node_modules && npm install -o"
-  },
   "files": [
     "package.json",
     "package-lock.json"
@@ -48,5 +45,15 @@
     "vue-template-compiler": "^2.5.8",
     "webpack": "^3.8.1",
     "webpack-clean-obsolete-chunks": "^0.3.0"
+  },
+  "scripts": {
+    "install-fresh": "rm -rf ./node_modules && npm install -o",
+    "app": "php -S 0.0.0.0:8888 dev/index.php",
+    "selenium-chrome-mac": "java -Dwebdriver.chrome.driver=node_modules/chromedriver/bin/chromedriver -jar vendor/se/selenium-server-standalone/bin/selenium-server-standalone.jar || true",
+    "selenium-chrome-win": "java -Dwebdriver.chrome.driver=node_modules\\.bin\\chromedriver.cmd -jar vendor\\se\\selenium-server-standalone\\bin\\selenium-server-standalone.jar || true",
+    "build-dev": "webpack --watch --config webpack.config.dev.js --colors --progress --hide-modules || true",
+    "build-stats": "webpack --config webpack.config.prod.js --json > webpack-stats.json",
+    "build-prod": "webpack --config webpack.config.prod.js --colors --progress --hide-modules || true",
+    "js-tests": "karma start test/unit/js/karma.conf.js -- --tags @active"
   }
 }
