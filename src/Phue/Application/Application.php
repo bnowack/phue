@@ -9,6 +9,7 @@ use Phue\Database\DatabaseProvider;
 use Phue\Schema\SchemaProvider;
 use Phue\Security\SecurityProvider;
 use Phue\User\UserProvider;
+use Phue\User\PermissionProvider;
 use Silex\Application as SilexApplication;
 use Silex\Application\TwigTrait;
 use Silex\Provider\SessionServiceProvider;
@@ -26,6 +27,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  * @property SchemaProvider $schema
  * @property SecurityProvider $security
  * @property UserProviderInterface|UserProvider $users
+ * @property PermissionProvider $permissions
  * @property Session $session
  *
  * @property bool $debug

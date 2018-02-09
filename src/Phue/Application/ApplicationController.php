@@ -65,7 +65,12 @@ class ApplicationController
     public function handleTemplateRequest(Application $app, $routeConfig = null)
     {
         // check role
-        if (!empty($routeConfig->role) && !$app['users']->hasRole($routeConfig->role)) {
+        if (!empty($routeConfig->role) && !$app->users->hasRole($routeConfig->role)) {
+            return $this->handleAccessDenied($app, $routeConfig);
+        }
+
+        // check permission
+        if (!empty($routeConfig->permission) && !$app->permissions->hasPermission($routeConfig->permission)) {
             return $this->handleAccessDenied($app, $routeConfig);
         }
 

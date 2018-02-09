@@ -51,6 +51,7 @@ class ConfigProvider extends ServiceProvider
             'icons',
             'templates',
             'routes',
+            'roles',
             '_databases'
         );
 

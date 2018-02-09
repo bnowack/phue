@@ -49,6 +49,15 @@
     "error": "Phue/Application/templates/error.html.twig"
   },
   "serviceProviders": {
-    "users": "Phue\\User\\UserProvider"
+    "users": "Phue\\User\\UserProvider",
+    "permissions": "Phue\\User\\PermissionProvider"
+  },
+  "roles": {
+    "admin": {
+      "label": "Administrator",
+      "permissions": {
+        "*": ["*"]
+      }
+    }
   }
 }

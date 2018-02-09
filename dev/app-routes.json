@@ -1,9 +1,19 @@
 {
   "routes": {
-    "/secured": {
-      "pageTitle": "Secured area",
+    "/secured-by-role": {
+      "pageTitle": "Secured area (by role)",
       "content": "Access granted",
       "role": "admin"
+    },
+    "/secured-by-permission": {
+      "pageTitle": "Secured area (by permission)",
+      "content": "Access granted",
+      "permission": "test-area:read"
+    },
+    "/secured-by-qualified-permission": {
+      "pageTitle": "Secured area (by qualified-permission)",
+      "content": "Access granted",
+      "permission": "profile:read"
     }
   }
 }

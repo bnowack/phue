@@ -6,5 +6,20 @@
   "phueSrcPath": "src/",
   "_dataDirectory": "dev/data",
   "_adminUser": "admin",
-  "accessDeniedMessage": "Access Denied"
+  "accessDeniedMessage": "Access Denied",
+  "roles": {
+    "admin": {
+      "label": "Administrator",
+      "permissions": {
+        "test-area": ["read", "test"],
+        "profile(owner)": ["read", "update"]
+      }
+    },
+    "tester": {
+      "label": "Tester",
+      "permissions": {
+        "*": ["*"]
+      }
+    }
+  }
 }
