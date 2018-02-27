@@ -1,6 +1,6 @@
 {
   "name": "phue-dev-tools",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "Dev tools for Phue",
   "files": [
     "package.json",
