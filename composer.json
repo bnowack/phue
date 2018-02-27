@@ -36,6 +36,7 @@
   },
   "autoload-dev": {
     "psr-4": {
+      "dev\\": "dev",
       "phpspec\\": "test/unit/phpspec",
       "fixture\\": "test/fixtures",
       "Test\\System\\Context\\": "test/system/contexts"

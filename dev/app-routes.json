@@ -10,8 +10,9 @@
       "content": "Access granted",
       "permission": "test-area:read"
     },
-    "/secured-by-qualified-permission": {
-      "pageTitle": "Secured area (by qualified-permission)",
+    "/secured-by-qualified-permission/profile/{profileOwner}": {
+      "call": "dev\\DevController::showSecuredProfile",
+      "pageTitle": "Secured area (by qualified profile permission)",
       "content": "Access granted",
       "permission": "profile:read"
     }
