@@ -64,13 +64,7 @@ class ApplicationController
      */
     public function handleTemplateRequest(Application $app, $routeConfig = null)
     {
-        // check role
-        if (!empty($routeConfig->role) && !$app->users->hasRole($routeConfig->role)) {
-            return $this->handleAccessDenied($app, $routeConfig);
-        }
-
-        // check permission
-        if (!empty($routeConfig->permission) && !$app->permissions->hasPermission($routeConfig->permission)) {
+        if (!$this->userHasAccess($app, $routeConfig)) {
             return $this->handleAccessDenied($app, $routeConfig);
         }
 
@@ -113,6 +107,33 @@ class ApplicationController
         $response->headers->set('X-App-View', $request->getPathInfo());
 
         return $response;
+    }
+
+    /**
+     * Checks if a user may access the current route
+     *
+     * @param Application $app
+     * @param object $routeConfig The route definition as specified in the configuration file
+     *
+     * @return boolean TRUE if user has access, FALSE otherwise
+     */
+    protected function userHasAccess(Application $app, $routeConfig = null)
+    {
+        // check role
+        if (!empty($routeConfig->role) && !$app->users->hasRole($routeConfig->role)) {
+            return false;
+        }
+
+        // check permission
+        if (!empty($routeConfig->permission)) {
+            $permission = $routeConfig->permission;
+            $context = !empty($routeConfig->permissionContext) ? $routeConfig->permissionContext : null;
+            if (!$app->permissions->hasPermission($permission, $context)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
