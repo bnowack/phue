@@ -5,6 +5,7 @@ namespace Test\System\Context;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Tester\Exception\PendingException;
 use PHPUnit\Framework\Assert;
+use Behat\MinkExtension\Context\MinkContext;
 
 /**
  * Phue step definitions
