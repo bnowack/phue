@@ -22,10 +22,12 @@
       "loginLabel": "Sign in",
       "loginHref": "/phue/account/login",
       "sysNavMenuTemplate": "Phue/Application/templates/sys-nav-menu.html.twig",
-      "logoutHref": "/phue/account/logout",
-      "logoutLabel": "Sign out",
+      "adminAreaHref": "/admin",
+      "adminAreaLabel": "Administration",
       "passwordChangeHref": "/phue/account/password-change",
-      "passwordChangeLabel": "Change your password"
+      "passwordChangeLabel": "Change your password",
+      "logoutHref": "/phue/account/logout",
+      "logoutLabel": "Sign out"
     },
 
     "GET /phue/account/login": {
@@ -69,6 +71,11 @@
       "call": "Phue\\Security\\PasswordController::handlePasswordRequest",
       "errorText": "Password could not be changed. Please check your input and try again.",
       "successText": "Your password was updated"
+    },
+
+    "/admin": {
+      "pageTitle": "Administration",
+      "content": "Administration"
     }
   }
 }
