@@ -129,7 +129,9 @@ class Application extends SilexApplication
     {
         foreach ($this->config->get('serviceProviders', []) as $serviceName => $providerClassName) {
             $this->register(new $providerClassName($serviceName));
-            $this[$serviceName]->boot($this);
+            if (method_exists($this[$serviceName], 'boot')) {
+                $this[$serviceName]->boot($this);
+            }
         }
     }
 
