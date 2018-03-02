@@ -1,0 +1,8 @@
+{
+  "routes": {
+    "/additional-route": {
+      "pageTitle": "Additional Route",
+      "content": "Activated by `app-routes-2.json`"
+    }
+  }
+}

@@ -82,6 +82,10 @@ class Config
             }
 
             foreach ($data as $name => $value) {
+                if ($name === '@includes') {
+                    $this->loadIncludes($value, $mergeFields);
+                }
+
                 if (in_array($name, $mergeFields) && isset($this->data->$name)) {
                     $this->merge($name, $value);
                 } else {
@@ -91,6 +95,21 @@ class Config
         }
 
         return $this;
+    }
+
+    /**
+     * Integrates files specified in an "@includes" entry
+     *
+     * @param $paths
+     * @param $mergeFields
+     */
+    protected function loadIncludes($paths, $mergeFields)
+    {
+        foreach ($paths as $path) {
+            $path = $this->replacePlaceholders($path);
+            $path = $this->replaceConstants($path);
+            $this->loadFile($path, $mergeFields);
+        }
     }
 
     protected function replacePlaceholders($value)

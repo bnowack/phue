@@ -1,4 +1,7 @@
 {
+  "@includes": [
+    "{PHUE_APP_DIR}dev/app-routes-2.json"
+  ],
   "appBase": [
     "/test-base/",
     "/"
