@@ -38,6 +38,8 @@ class Application extends SilexApplication
         render as twigRender;
     }
 
+    use RoutingTrait;
+
     /** @var string Application base path (with trailing slash) */
     public $base = null;
 
@@ -161,47 +163,6 @@ class Application extends SilexApplication
         }
 
         $this->base = $base;
-    }
-
-    /**
-     * Initializes the application routes specified in the configuration
-     */
-    protected function initRoutes()
-    {
-        $routes = $this->config->get('routes', array());
-        foreach ($routes as $path => $routeConfig) {
-            // extract method restriction, e.g. from `GET|POST /path`
-            $method = null;
-            if (preg_match('/^(.+) (.+)$/', $path, $pathMatch)) {
-                $method = $pathMatch[1];
-                $path = $pathMatch[2];
-            }
-
-            $pathWithBase = $this->base . ltrim($path, '/');
-            if (is_string($routeConfig)) {// routeOptions is a `Class::method` string
-                $controller = $this->match($pathWithBase, $routeConfig);
-            } else {// routeOptions is an object (and should have a 'call' property)
-                // set default call
-                if (empty($routeConfig->call)) {
-                    $routeConfig->call = $this->config->get('defaultRouteCall');
-                }
-
-                // set default template
-                if (empty($routeConfig->pageTemplate)) {
-                    $routeConfig->pageTemplate = $this->config->get('templates')->page;
-                }
-
-                // activate route
-                $controller = $this->match($pathWithBase, $routeConfig->call);
-
-                // make route config available as controller call parameter
-                $controller->value('routeConfig', $routeConfig);
-            }
-
-            if ($method) {
-                $controller->method($method);
-            }
-        }
     }
 
     /**
