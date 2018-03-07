@@ -47,12 +47,14 @@ class ConfigProvider extends ServiceProvider
             : [];
 
         $mergeFields = array(
-            'meta',
+            '_databases',
+            'forms',
             'icons',
-            'templates',
-            'routes',
+            'meta',
             'roles',
-            '_databases'
+            'routes',
+            'serviceProviders',
+            'templates'
         );
 
         /* @var Config $config */
