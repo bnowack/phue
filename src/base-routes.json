@@ -3,86 +3,86 @@
   "routes": {
     "/": {
       "pageTitle": "Welcome",
-      "contentTemplate": "Phue/Application/templates/welcome.html.twig",
+      "contentTemplate": "Phue/Application/templates/welcome.html.twig"
+    },
 
-      "/manifest.json": {
-        "pageTemplate": "Phue/Application/templates/manifest.json.twig",
-        "contentType": "application/json"
-      },
+    "/manifest.json": {
+      "pageTemplate": "Phue/Application/templates/manifest.json.twig",
+      "contentType": "application/json"
+    },
 
-      "/admin": {
-        "pageTitle": "Administration",
-        "content": "Administration"
-      },
+    "/admin": {
+      "pageTitle": "Administration",
+      "content": "Administration"
+    },
 
-      "/phue": {
+    "/phue": {
 
-        "/account": {
+      "/account": {
 
-          "GET /login": {
-            "call": "Phue\\Security\\LoginController::showLoginForm",
-            "pageTitle": "Sign in",
-            "element": "phue-login-form",
-            "elementData": {
-              "heading": "Sign in",
-              "usernameLabel": "Username",
-              "passwordLabel": "Password",
-              "buttonLabel": "Sign in"
-            }
-          },
-
-          "POST /login": {
-            "call": "Phue\\Security\\LoginController::handleLoginRequest",
-            "errorText": "Wrong username or password. Please try again.",
-            "successText": "Login successful",
-            "successHref": "/"
-          },
-
-          "POST /logout": {
-            "call": "Phue\\Security\\LogoutController::handleLogoutRequest",
-            "successHref": "/"
-          },
-
-          "GET /password-change": {
-            "call": "Phue\\Security\\PasswordController::showPasswordChangeForm",
-            "pageTitle": "Change your password",
-            "element": "phue-password-change-form",
-            "elementData": {
-              "heading": "Change your password",
-              "oldPasswordLabel": "Current password",
-              "newPasswordLabel": "New password",
-              "passwordConfirmationLabel": "New password again",
-              "buttonLabel": "Update password"
-            }
-          },
-
-          "POST /password-change": {
-            "call": "Phue\\Security\\PasswordController::handlePasswordRequest",
-            "errorText": "Password could not be changed. Please check your input and try again.",
-            "successText": "Your password was updated"
+        "GET /login": {
+          "call": "Phue\\Security\\LoginController::showLoginForm",
+          "pageTitle": "Sign in",
+          "element": "phue-login-form",
+          "elementData": {
+            "heading": "Sign in",
+            "usernameLabel": "Username",
+            "passwordLabel": "Password",
+            "buttonLabel": "Sign in"
           }
         },
 
-        "/account.json": {
-          "call": "Phue\\Security\\SecurityController::showAccountInfo",
-          "loginLabel": "Sign in",
-          "loginHref": "/phue/account/login",
-          "sysNavMenuTemplate": "Phue/Application/templates/sys-nav-menu.html.twig",
-          "adminAreaHref": "/admin",
-          "adminAreaLabel": "Administration",
-          "passwordChangeHref": "/phue/account/password-change",
-          "passwordChangeLabel": "Change your password",
-          "logoutHref": "/phue/account/logout",
-          "logoutLabel": "Sign out"
+        "POST /login": {
+          "call": "Phue\\Security\\LoginController::handleLoginRequest",
+          "errorText": "Wrong username or password. Please try again.",
+          "successText": "Login successful",
+          "successHref": "/"
         },
 
-        "/schema": {
+        "POST /logout": {
+          "call": "Phue\\Security\\LogoutController::handleLogoutRequest",
+          "successHref": "/"
+        },
 
-          "/changes": {
-            "pageTitle": "Schema Changes",
-            "heading": "Applied Schema Changes",
-            "call": "Phue\\Schema\\SchemaController::showSchemaChanges"
+        "GET /password-change": {
+          "call": "Phue\\Security\\PasswordController::showPasswordChangeForm",
+          "pageTitle": "Change your password",
+          "element": "phue-password-change-form",
+          "elementData": {
+            "heading": "Change your password",
+            "oldPasswordLabel": "Current password",
+            "newPasswordLabel": "New password",
+            "passwordConfirmationLabel": "New password again",
+            "buttonLabel": "Update password"
           }
+        },
+
+        "POST /password-change": {
+          "call": "Phue\\Security\\PasswordController::handlePasswordRequest",
+          "errorText": "Password could not be changed. Please check your input and try again.",
+          "successText": "Your password was updated"
+        }
+      },
+
+      "/account.json": {
+        "call": "Phue\\Security\\SecurityController::showAccountInfo",
+        "loginLabel": "Sign in",
+        "loginHref": "/phue/account/login",
+        "sysNavMenuTemplate": "Phue/Application/templates/sys-nav-menu.html.twig",
+        "adminAreaHref": "/admin",
+        "adminAreaLabel": "Administration",
+        "passwordChangeHref": "/phue/account/password-change",
+        "passwordChangeLabel": "Change your password",
+        "logoutHref": "/phue/account/logout",
+        "logoutLabel": "Sign out"
+      },
+
+      "/schema": {
+
+        "/changes": {
+          "pageTitle": "Schema Changes",
+          "heading": "Applied Schema Changes",
+          "call": "Phue\\Schema\\SchemaController::showSchemaChanges"
         }
       }
     }
