@@ -84,6 +84,7 @@ class Config
             foreach ($data as $name => $value) {
                 if ($name === '@includes') {
                     $this->loadIncludes($value, $mergeFields);
+                    continue;
                 }
 
                 if (in_array($name, $mergeFields) && isset($this->data->$name)) {
