@@ -97,6 +97,10 @@ export default {
             });
             // inject router
             Component.options.router = this.$router;
+            // inject vuex
+            if (this.$store) {
+                Component.options.store = this.$store;
+            }
             // instantiate component
             let component = new Component();
             component.$mount(this.$el.querySelector('.phue-app-content'));
