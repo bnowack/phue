@@ -3,17 +3,17 @@
   "routes": {
     "/": {
       "pageTitle": "Welcome",
-      "contentTemplate": "Phue/Application/templates/welcome.html.twig"
+      "contentTemplate": "Phue/Application/templates/welcome.html.twig",
+
+      "/admin": {
+        "pageTitle": "Administration",
+        "content": "Administration"
+      }
     },
 
     "/manifest.json": {
       "pageTemplate": "Phue/Application/templates/manifest.json.twig",
       "contentType": "application/json"
-    },
-
-    "/admin": {
-      "pageTitle": "Administration",
-      "content": "Administration"
     },
 
     "/phue": {
