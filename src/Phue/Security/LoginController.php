@@ -74,7 +74,7 @@ class LoginController extends ApplicationController
         return new JsonResponse([
             'success' => true,
             'message' => $routeConfig->successText,
-            'successHref' => $routeConfig->successHref
+            'successHref' => $request->query->get('r', '/')
         ]);
     }
 }

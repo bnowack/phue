@@ -17,7 +17,7 @@
 
         computed: {
             loginHref() {
-                return this.account.loginHref || '/'
+                return (this.account.loginHref || '/') + '?r=' + location.pathname + location.search;
             },
             isGuest() {
                 if (!this.account.roles) {

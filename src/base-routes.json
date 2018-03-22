@@ -35,8 +35,7 @@
         "POST /login": {
           "call": "Phue\\Security\\LoginController::handleLoginRequest",
           "errorText": "Wrong username or password. Please try again.",
-          "successText": "Login successful",
-          "successHref": "/"
+          "successText": "Login successful"
         },
 
         "POST /logout": {
