@@ -17,7 +17,8 @@
 
         computed: {
             loginHref() {
-                return (this.account.loginHref || '/') + '?r=' + location.pathname + location.search;
+                let currentPath = location.pathname.replace(new RegExp("^" + phue.appBase), '/');
+                return (this.account.loginHref || '/') + '?r=' + currentPath + location.search;
             },
             isGuest() {
                 if (!this.account.roles) {
