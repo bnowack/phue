@@ -4,7 +4,7 @@ namespace Phue\Application;
 
 use JsonSerializable;
 
-class Object implements JsonSerializable
+class ApplicationObject implements JsonSerializable
 {
 
     /** @var array Non-serializable properties */

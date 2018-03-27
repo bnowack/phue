@@ -5,21 +5,21 @@ namespace phpspec\Phue\Application;
 use Exception;
 use PhpSpec\ObjectBehavior;
 use PHPUnit\Framework\Assert;
-use Phue\Application\Object;
+use Phue\Application\ApplicationObject;
 
-class ObjectSpec extends ObjectBehavior
+class ApplicationObjectSpec extends ObjectBehavior
 {
     protected function buildObject($classDefinition, $data = null)
     {
         $className = 'Object' . uniqid();
-        eval("class $className extends Phue\Application\Object { $classDefinition }");
+        eval("class $className extends Phue\Application\ApplicationObject { $classDefinition }");
         return new $className($data);
     }
 
     public function it_is_initializable()
     {
         $this->beConstructedWith((object)[]);
-        $this->shouldHaveType(Object::class);
+        $this->shouldHaveType(ApplicationObject::class);
     }
 
     public function it_is_initializable_with_arbitrary_data()
@@ -27,7 +27,7 @@ class ObjectSpec extends ObjectBehavior
         $this->beConstructedWith((object)[
             'undefinedProperty' => 'bar'
         ]);
-        $this->shouldHaveType(Object::class);
+        $this->shouldHaveType(ApplicationObject::class);
     }
 
     public function it_imports_known_properties_from_constructor_data()
