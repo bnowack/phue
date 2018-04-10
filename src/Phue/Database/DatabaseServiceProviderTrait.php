@@ -92,7 +92,7 @@ trait DatabaseServiceProviderTrait
         }
 
         // convert className in $type to 'object'
-        if (class_exists($type, false)) {
+        if (class_exists($type)) {
             $type = 'object';
         }
 
