@@ -104,7 +104,7 @@ class ApplicationController
 
         // inject page title
         $response->headers->set('X-Page-Title', utf8_decode($routeConfig->pageTitle));
-        $response->headers->set('X-App-View', $request->getPathInfo());
+        $response->headers->set('X-App-View', $app->getAppViewPath($request));
 
         return $response;
     }

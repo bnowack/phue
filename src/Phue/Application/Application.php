@@ -254,7 +254,7 @@ class Application extends SilexApplication
             'debug' => $this->debug,
             'appBase' => $this->base,
             'request' => $request,
-            'appView' => $request->getPathInfo(),
+            'appView' => $this->getAppViewPath($request),
             'pageTemplate' => $this->config->get('templates')->page
         ];
 
@@ -277,6 +277,13 @@ class Application extends SilexApplication
         return json_decode(json_encode($result), true);
     }
 
+    public function getAppViewPath(Request $request)
+    {
+        $fullPath = $request->getPathInfo();
+        $base = $this->base;
+        return preg_replace('/^' . preg_quote($base, '/') . '/', '/', $fullPath);
+    }
+
     /**
      * Checks if the given request asks for a layout-free response, or the whole page
      *
@@ -293,5 +300,4 @@ class Application extends SilexApplication
         return ($request->headers->get('X-Content-Only') === '1')
             || ($request->query->get('content-only') === '1');
     }
-
 }
