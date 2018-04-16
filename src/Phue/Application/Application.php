@@ -17,6 +17,7 @@ use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
@@ -98,6 +99,12 @@ class Application extends SilexApplication
 
         // register session service provider
         $this->register(new SessionServiceProvider());
+        $this['session.storage'] = new NativeSessionStorage([
+            // avoid cookie conflicts when multiple phue apps run on the same host
+            'name' => 'phue_session_' . substr(md5(PHUE_SRC_DIR), 0, 8),
+            // set the cookie lifetime to non-zero, so that mobile Safari does not kill the session on close
+            'cookie_lifetime' => 3600 * 24 * 7 // 1 week
+        ]);
 
         // register security service provider
         $this->register(new SecurityProvider('security'));
