@@ -2,6 +2,7 @@
 
 namespace Phue\Application;
 
+use Exception;
 use JsonSerializable;
 
 class ApplicationObject implements JsonSerializable
@@ -15,10 +16,16 @@ class ApplicationObject implements JsonSerializable
      *
      * @param object|array $data
      */
-    public function __construct($data)
+    public function __construct($data, $strict = false)
     {
         foreach ($data as $property => $value) {
-            $this->__set($property, $value);
+            try {
+                $this->__set($property, $value);
+            } catch (Exception $exception) {
+                if ($strict) {
+                    throw $exception;
+                }
+            }
         }
     }
 
@@ -33,7 +40,7 @@ class ApplicationObject implements JsonSerializable
     public function __get($property)
     {
         if (!property_exists($this, $property)) {
-            throw new \Exception("Undefined property '$property'");
+            throw new Exception("Undefined property '$property'");
         }
 
         $getter = 'get' . ucfirst($property);
@@ -51,19 +58,19 @@ class ApplicationObject implements JsonSerializable
      * @param array $arguments
      *
      * @return mixed
-     * @throws \Exception If property is not defined
+     * @throws Exception If property is not defined
      */
     public function __call($method, $arguments = null)
     {
         $prefix = substr($method, 0, 3);
 
         if (!in_array($prefix, ['get', 'set'])) {
-            throw new \Exception("Undefined method '$method'");
+            throw new Exception("Undefined method '$method'");
         }
 
         $property = lcfirst(substr($method, 3));
         if (!property_exists($this, $property)) {
-            throw new \Exception("Undefined property '$property'");
+            throw new Exception("Undefined property '$property'");
         }
 
         if ($prefix === 'get') {// get
@@ -79,6 +86,7 @@ class ApplicationObject implements JsonSerializable
      *
      * @param string $property
      * @param mixed $value
+     * @param bool $strict Whether to throw an exception on undefined properties
      *
      * @return mixed
      * @throws \Exception If property is not defined
@@ -86,7 +94,7 @@ class ApplicationObject implements JsonSerializable
     public function __set($property, $value = null)
     {
         if (!property_exists($this, $property)) {
-            throw new \Exception("Undefined property '$property'");
+            throw new Exception("Undefined property '$property'");
         }
 
         $setter = 'set' . ucfirst($property);
