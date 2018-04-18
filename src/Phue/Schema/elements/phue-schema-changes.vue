@@ -8,7 +8,7 @@
             <md-list class="md-double-line">
                 <template v-for="change in formattedChanges">
                     <md-list-item >
-                        <md-icon>done</md-icon>
+                        <md-icon :md-src="iconPath('done-icon.svg')" />
                         <div class="md-list-item-text">
                             <span>{{ change.name }}</span>
                             <span>(applied {{ change.appliedString }})</span>
@@ -52,6 +52,11 @@
 
                     return change;
                 });
+            }
+        },
+        methods: {
+            iconPath(fileName) {
+                return phue.appBase + phue.phueSrc + 'Phue/Application/img/' + fileName;
             }
         }
     }
