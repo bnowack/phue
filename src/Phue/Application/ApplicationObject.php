@@ -15,10 +15,10 @@ class ApplicationObject implements JsonSerializable
      *
      * @param object|array $data
      */
-    public function __construct($data)
+    public function __construct($data, $strict = false)
     {
         foreach ($data as $property => $value) {
-            $this->__set($property, $value);
+            $this->__set($property, $value, $strict);
         }
     }
 
@@ -79,14 +79,19 @@ class ApplicationObject implements JsonSerializable
      *
      * @param string $property
      * @param mixed $value
+     * @param bool $strict Whether to throw an exception on undefined properties
      *
      * @return mixed
      * @throws \Exception If property is not defined
      */
-    public function __set($property, $value = null)
+    public function __set($property, $value = null, $strict = false)
     {
         if (!property_exists($this, $property)) {
-            throw new \Exception("Undefined property '$property'");
+            if ($strict) {
+                throw new \Exception("Undefined property '$property'");
+            } else {
+                return $this;
+            }
         }
 
         $setter = 'set' . ucfirst($property);
