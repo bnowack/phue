@@ -49,7 +49,6 @@ class UserProvider extends ServiceProvider implements UserProviderInterface
      * @param int $userId
      *
      * @return User User object
-     *
      * @throws Exception when user id cannot be found
      */
     public function loadUser($userId)
@@ -77,6 +76,22 @@ class UserProvider extends ServiceProvider implements UserProviderInterface
     }
 
     /**
+     * Used by DatabaseServiceProviderTrait
+     *
+     * @param int $userId
+     *
+     * @return User|null
+     */
+    public function getUser($userId)
+    {
+        try {
+            return $this->loadUser($userId);
+        } catch (Exception $exception) {
+            return null;
+        }
+    }
+
+    /**
      * Loads a user from the database
      *
      * @param string $username
@@ -99,10 +114,10 @@ class UserProvider extends ServiceProvider implements UserProviderInterface
             $row['username'],
             $row['password'],
             explode(',', $row['roles']),
-            $row['enabled'],
-            $row['expired'],
-            $row['credentialsExpired'],
-            $row['locked']
+            (intval($row['enabled']) === 1),
+            (intval($row['expired']) === 1),
+            (intval($row['credentialsExpired']) === 1),
+            (intval($row['locked']) === 1)
         );
     }
 
@@ -292,22 +307,7 @@ class UserProvider extends ServiceProvider implements UserProviderInterface
      */
     public function saveUser(User $user)
     {
-        $conn = $this->getConnection('users');
-        $data = $this->buildTableValues($user);
-
-        // INSERT if user is new
-        if (!$this->usernameExists($user->getUsername())) {
-            $conn->beginTransaction();
-            $affectedRows = $conn->insert('User', $data);
-            // use newly generated rowId as userId
-            $userId = $conn->lastInsertId();
-            $conn->update('User', ['userId' => $userId], ['rowId' => $userId]);
-            $conn->commit();
-            return $affectedRows;
-        }
-
-        // UPDATE if user is known
-        return $conn->update('User', $data, ['userId' => $user->getUserId()]);
+        return $this->saveObject('users', 'User', 'userId', $user);
     }
 
     /**
@@ -317,17 +317,17 @@ class UserProvider extends ServiceProvider implements UserProviderInterface
      *
      * @return array
      */
-    protected function buildTableValues(User $user)
+    protected function encodeTableValues(User $user)
     {
         return [
             'userId' => $user->getUserId(),
             'username' => strtolower($user->getUsername()),
             'password' => $user->getPassword(),
             'roles' => join(',', $user->getRoles()),
-            'enabled' => $user->isEnabled(),
-            'expired' => !$user->isAccountNonExpired(),
-            'credentialsExpired' => !$user->isCredentialsNonExpired(),
-            'locked' => !$user->isAccountNonLocked()
+            'enabled' => $user->isEnabled() ? 1 : 0,
+            'expired' => $user->isAccountNonExpired() ? 0 : 1,
+            'credentialsExpired' => $user->isCredentialsNonExpired() ? 0 : 1,
+            'locked' => $user->isAccountNonLocked() ? 0 : 1
         ];
     }
 }
