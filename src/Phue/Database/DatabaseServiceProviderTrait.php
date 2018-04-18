@@ -182,4 +182,50 @@ trait DatabaseServiceProviderTrait
 
         return new $className($data);
     }
+
+    /**
+     * Saves an object
+     *
+     * @param string $connectionName e.g. "users"
+     * @param string $className e.g. "User"
+     * @param string $idName e.g. "userId"
+     * @param object $obj e.g. User
+     *
+     * @return int
+     * @throws \Doctrine\DBAL\ConnectionException
+     */
+    protected function saveObject($connectionName, $className, $idName, $obj)
+    {
+        $conn = $this->getConnection($connectionName);
+
+        // set modified
+        if (isset($obj->modified)) {
+            $obj->modified = time();
+        }
+
+        // build table data
+        $tableName = $className;
+        $data = $this->encodeTableValues($obj, $tableName);
+
+        // INSERT if id is not set
+        if ($data[$idName] === null) {
+            $conn->beginTransaction();
+            $affectedRows = $conn->insert($tableName, $data);
+            // update newly generated rowId
+            $data[$idName] = $conn->lastInsertId();
+            $conn->update($tableName, [$idName => $data[$idName]], ['rowId' => $data[$idName]]);
+            $conn->commit();
+            return $affectedRows;
+        }
+
+        // INSERT if id is set but not saved yet
+        $getObjectMethod = 'get' . $className;
+        $idExists = ($this->$getObjectMethod($data[$idName]) !== null);
+        if (!$idExists) {
+            return $conn->insert($tableName, $data);
+        }
+
+        // UPDATE if id was saved before
+        return $conn->update($tableName, $data, [$idName => $data[$idName]]);
+    }
 }
