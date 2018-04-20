@@ -198,34 +198,43 @@ trait DatabaseServiceProviderTrait
     {
         $conn = $this->getConnection($connectionName);
 
-        // set modified
-        if (isset($obj->modified)) {
-            $obj->modified = time();
-        }
-
         // build table data
         $tableName = $className;
         $data = $this->encodeTableValues($obj, $tableName);
 
+        // set created
+        if (isset($data['created']) && empty($data['created'])) {
+            $data['created'] = time();
+            $obj->setCreated($data['created']);
+        }
+
+        if (isset($data['modified'])) {
+            $data['modified'] = time();
+            $obj->setModified($data['modified']);
+        }
+
+        $objectId = $data[$idName];
+
         // INSERT if id is not set
-        if ($data[$idName] === null) {
+        if ($objectId === null) {
             $conn->beginTransaction();
             $affectedRows = $conn->insert($tableName, $data);
             // update newly generated rowId
-            $data[$idName] = $conn->lastInsertId();
-            $conn->update($tableName, [$idName => $data[$idName]], ['rowId' => $data[$idName]]);
+            $objectId = $conn->lastInsertId();
+            $data[$idName] = $objectId;
+            $conn->update($tableName, [$idName => $objectId], ['rowId' => $objectId]);
             $conn->commit();
+            $obj->{'set' . ucfirst($idName)}($objectId);// add created ID to object reference
             return $affectedRows;
         }
 
         // INSERT if id is set but not saved yet
-        $getObjectMethod = 'get' . $className;
-        $idExists = ($this->$getObjectMethod($data[$idName]) !== null);
+        $idExists = ($this->{'get' . $className}($objectId) !== null);
         if (!$idExists) {
             return $conn->insert($tableName, $data);
         }
 
         // UPDATE if id was saved before
-        return $conn->update($tableName, $data, [$idName => $data[$idName]]);
+        return $conn->update($tableName, $data, [$idName => $objectId]);
     }
 }
