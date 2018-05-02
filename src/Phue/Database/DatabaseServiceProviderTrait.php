@@ -203,16 +203,18 @@ trait DatabaseServiceProviderTrait
         $data = $this->encodeTableValues($obj, $tableName);
 
         // set created
-        if (isset($data['created']) && empty($data['created'])) {
+        if (array_key_exists('created', $data) && empty($data['created'])) {
             $data['created'] = time();
             $obj->setCreated($data['created']);
         }
 
-        if (isset($data['modified'])) {
+        // set modified
+        if (array_key_exists('modified', $data)) {
             $data['modified'] = time();
             $obj->setModified($data['modified']);
         }
 
+        // persist object
         $objectId = $data[$idName];
 
         // INSERT if id is not set
