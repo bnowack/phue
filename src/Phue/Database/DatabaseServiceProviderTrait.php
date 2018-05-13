@@ -190,11 +190,12 @@ trait DatabaseServiceProviderTrait
      * @param string $className e.g. "User"
      * @param string $idName e.g. "userId"
      * @param object $obj e.g. User
+     * @param boolean $updateModified Whether to auto-update `modified` property
      *
      * @return int
      * @throws \Doctrine\DBAL\ConnectionException
      */
-    protected function saveObject($connectionName, $className, $idName, $obj)
+    protected function saveObject($connectionName, $className, $idName, $obj, $updateModified = true)
     {
         $conn = $this->getConnection($connectionName);
 
@@ -209,7 +210,7 @@ trait DatabaseServiceProviderTrait
         }
 
         // set modified
-        if (array_key_exists('modified', $data)) {
+        if (array_key_exists('modified', $data) && $updateModified) {
             $data['modified'] = time();
             $obj->setModified($data['modified']);
         }
@@ -238,5 +239,22 @@ trait DatabaseServiceProviderTrait
 
         // UPDATE if id was saved before
         return $conn->update($tableName, $data, [$idName => $objectId]);
+    }
+
+    /**
+     * Imports an object, e.g. from a backup file
+     *
+     * @param string $connectionName e.g. "users"
+     * @param string $className e.g. "User"
+     * @param string $idName e.g. "userId"
+     * @param object $obj e.g. User
+     *
+     * @return int
+     * @throws \Doctrine\DBAL\ConnectionException
+     */
+    protected function importObject($connectionName, $className, $idName, $obj)
+    {
+        $updateModified = false;
+        return $this->saveObject($connectionName, $className, $idName, $obj, $updateModified);
     }
 }
