@@ -3,11 +3,12 @@
 namespace Phue\User;
 
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use JsonSerializable;
 
 /**
  * Phue User class
  */
-class User implements AdvancedUserInterface
+class User implements AdvancedUserInterface, JsonSerializable
 {
     private $userId;
     private $username;
@@ -17,6 +18,9 @@ class User implements AdvancedUserInterface
     private $expired;
     private $credentialsExpired;
     private $locked;
+
+    /** @var array Non-serializable properties */
+    protected $hiddenProperties = [];
 
     public function __construct(
         $userId,
@@ -133,5 +137,25 @@ class User implements AdvancedUserInterface
     public function setPassword($password)
     {
         $this->password = $password;
+    }
+
+    /**
+     * Defines JSON-serializable properties and values
+     *
+     * @return object
+     */
+    public function jsonSerialize()
+    {
+        $data = [];
+        $properties = get_object_vars($this);
+        foreach ($properties as $property => $value) {
+            if ($property === 'hiddenProperties' || in_array($property, $this->hiddenProperties)) {
+                continue;
+            }
+
+            $data[$property] = $value;
+        }
+
+        return (object)$data;
     }
 }
