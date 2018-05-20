@@ -4,6 +4,7 @@ namespace Phue\Database;
 
 use Doctrine\DBAL\Connection;
 use Phue\Application\Application;
+use Exception;
 
 /**
  * Database service provider trait
@@ -232,7 +233,12 @@ trait DatabaseServiceProviderTrait
         }
 
         // INSERT if id is set but not saved yet
-        $idExists = ($this->{'get' . $className}($objectId) !== null);
+        try {
+            $idExists = ($this->{'get' . $className}($objectId) !== null);
+        } catch (Exception $exception) {// user provider throws exception in getUser with non-existing ID
+            $idExists = false;
+        }
+
         if (!$idExists) {
             return $conn->insert($tableName, $data);
         }
