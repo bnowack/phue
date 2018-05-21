@@ -46,13 +46,14 @@ trait DatabaseServiceProviderTrait
      * Returns a database connection
      *
      * @param string $databaseName
+     * @param null|array $params Parameters for parametrized database names
      *
      * @return Connection
      */
-    public function getConnection($databaseName)
+    public function getConnection($databaseName, $params = null)
     {
         if (!$this->connection) {
-            $this->connection = $this->app->database->connect($databaseName);
+            $this->connection = $this->app->database->connect($databaseName, $params);
         }
 
         return $this->connection;

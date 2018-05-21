@@ -56,17 +56,20 @@ class DatabaseProvider extends ServiceProvider
      * Connects to a database
      *
      * @param string $dbName Database name as specified in the configuration
+     * @param null|array $params Parameters for parametrized database names
      *
      * @return Connection Doctrine DBAL connection
      */
-    public function connect($dbName)
+    public function connect($dbName, $params = null)
     {
-        if (isset($this->connections[$dbName])) {
-            return $this->connections[$dbName];
+        $fullDbName = $this->replaceDbNameParams($dbName, $params);
+
+        if (isset($this->connections[$fullDbName])) {
+            return $this->connections[$fullDbName];
         }
 
         // get options
-        $options = $this->getConnectionOptions($dbName);
+        $options = $this->getConnectionOptions($dbName, $params);
         // create configuration
         $config = new Configuration();
         // create manager
@@ -78,28 +81,45 @@ class DatabaseProvider extends ServiceProvider
         }
 
         // create and return connection
-        $this->connections[$dbName] = DriverManager::getConnection($options, $config, $manager);
-        return $this->connections[$dbName];
+        $this->connections[$fullDbName] = DriverManager::getConnection($options, $config, $manager);
+        return $this->connections[$fullDbName];
+    }
+
+    /**
+     * @param string $dbNamePattern e.g. "log_*_*"
+     * @param null|array $params e.g. ["2018", "01"]
+     *
+     * @return string rendered DB name, e.g. "log_2018_01"
+     */
+    protected function replaceDbNameParams($dbNamePattern, $params = null) {
+        if (empty($params)) {
+            return $dbNamePattern;
+        }
+
+        array_unshift($params, str_replace('*', '%s', $dbNamePattern));
+        return call_user_func_array('sprintf', $params);
     }
 
     /**
      * Returns DB connection options and injects a database path for sqlite DBs
      *
      * @param string $dbName Database name as specified in the configuration
+     * @param null|array $params Parameters for database name placeholders
      *
      * @return array Connection options
      * @throws Exception When the database is not configured
      */
-    protected function getConnectionOptions($dbName)
+    protected function getConnectionOptions($dbName, $params = null)
     {
         $dbConfig = $this->app->config->get('_databases');
+
         if (!isset($dbConfig->$dbName)) {
             throw new Exception("Database '$dbName' is not configured");
         }
-        
+
         $options = (array)$dbConfig->$dbName;
         if ($options['driver'] === 'pdo_sqlite' && !isset($options['path'])) {
-            $options['path'] = $this->directory . '/' . $dbName . '.sqlite';
+            $options['path'] = $this->directory . '/' . $this->replaceDbNameParams($dbName, $params) . '.sqlite';
         }
 
         return $options;
