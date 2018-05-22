@@ -199,18 +199,19 @@ trait DatabaseServiceProviderTrait
     /**
      * Saves an object
      *
-     * @param string $connectionName e.g. "users"
+     * @param string|Connection $connection e.g. "users"
      * @param string $className e.g. "User"
      * @param string $idName e.g. "userId"
      * @param object $obj e.g. User
      * @param boolean $updateModified Whether to auto-update `modified` property
      *
      * @return int
-     * @throws \Doctrine\DBAL\ConnectionException
      */
-    protected function saveObject($connectionName, $className, $idName, $obj, $updateModified = true)
+    protected function saveObject($connection, $className, $idName, $obj, $updateModified = true)
     {
-        $conn = $this->getConnection($connectionName);
+        $conn = is_string($connection)
+            ? $this->getConnection($connection)
+            : $connection;
 
         // build table data
         $tableName = $className;
