@@ -20,6 +20,9 @@ trait DatabaseServiceProviderTrait
     /** @var Connection */
     protected $connection;
 
+    /** @var Connection[] */
+    protected $connections;
+
     /**
      * Returns the table definitions, e.g. for schema diffs
      *
@@ -52,11 +55,19 @@ trait DatabaseServiceProviderTrait
      */
     public function getConnection($databaseName, $params = null)
     {
-        if (!$this->connection) {
-            $this->connection = $this->app->database->connect($databaseName, $params);
+        // return injected connection, if pre-defined as singular connection
+        if ($this->connection) {
+            return $this->connection;
         }
 
-        return $this->connection;
+        // return injected connection, if pre-defined as connection hash
+        $connectionHash = $databaseName . json_encode($params);
+        if ($this->connections && !empty($this->connections[$connectionHash])) {
+            return $this->connections[$connectionHash];
+        }
+
+        // request connection from database provider
+        return $this->app->database->connect($databaseName, $params);
     }
 
     /**
