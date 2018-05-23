@@ -76,6 +76,14 @@ class DatabaseProvider extends ServiceProvider
         $manager = new EventManager();
         // create database file
         if ($options['driver'] === 'pdo_sqlite' && !is_file($options['path'])) {
+            $dir = preg_replace('/^(.+)[\/][^\/]*$/', '\\1', $options['path']);
+            if (!is_dir($dir)) {
+                $umask = umask(0);
+                mkdir($dir, 0777, true);
+                chmod($dir, 0777);
+                umask($umask);
+            }
+
             touch($options['path']);
             chmod($options['path'], 0777);
         }

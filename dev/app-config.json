@@ -9,7 +9,8 @@
   "phueSrcPath": "src/",
   "_dataDirectory": "dev/data",
   "_databases": {
-    "test_*_*": { "driver": "pdo_sqlite" }
+    "test_*_*": { "driver": "pdo_sqlite" },
+    "*/test_*": { "driver": "pdo_sqlite" }
   },
   "_adminUser": "admin",
   "accessDeniedMessage": "Access Denied",
