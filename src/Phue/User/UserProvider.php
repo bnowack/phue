@@ -102,7 +102,7 @@ class UserProvider extends ServiceProvider implements UserProviderInterface
         /** @noinspection SqlResolve */
         $row = $this->getConnection('users')->fetchAssoc(
             'SELECT * FROM User WHERE username = ?',
-            [strtolower($username)]
+            [mb_strtolower($username)]
         );
 
         if (!$row) {
@@ -279,7 +279,7 @@ class UserProvider extends ServiceProvider implements UserProviderInterface
         /** @noinspection SqlResolve */
         $row = $this->getConnection('users')->fetchAssoc(
             'SELECT username FROM User WHERE username = ?',
-            [strtolower($username)]
+            [mb_strtolower($username)]
         );
         return $row && !empty($row['username']);
     }
@@ -321,7 +321,7 @@ class UserProvider extends ServiceProvider implements UserProviderInterface
     {
         return [
             'userId' => $user->getUserId(),
-            'username' => strtolower($user->getUsername()),
+            'username' => mb_strtolower($user->getUsername()),
             'password' => $user->getPassword(),
             'roles' => join(',', $user->getRoles()),
             'enabled' => $user->isEnabled() ? 1 : 0,
