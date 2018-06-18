@@ -3,8 +3,9 @@
 namespace Phue\Database;
 
 use Doctrine\DBAL\Connection;
-use Phue\Application\Application;
 use Exception;
+use PDOException;
+use Phue\Application\Application;
 
 /**
  * Database service provider trait
@@ -269,7 +270,6 @@ trait DatabaseServiceProviderTrait
      * @param object $obj e.g. User
      *
      * @return int
-     * @throws \Doctrine\DBAL\ConnectionException
      */
     protected function importObject($connectionName, $className, $idName, $obj)
     {
@@ -298,5 +298,94 @@ trait DatabaseServiceProviderTrait
         }
 
         return join(', ', $projections);
+    }
+
+    /**
+     * Fetches a single column from the given query's result
+     *
+     * @param string|Connection $connection e.g. "users"
+     * @param object $query Query object with `sql` and `params` properties
+     * @param int $columnIndex
+     * @param null $default Default value in case of errors
+     *
+     * @return mixed|null
+     */
+    protected function fetchColumn($connection, $query, $columnIndex, $default = null)
+    {
+        $conn = is_string($connection)
+            ? $this->getConnection($connection)
+            : $connection;
+
+        try {
+            return $conn->fetchColumn($query->sql, $query->params, $columnIndex);
+        } catch (PDOException $exception) {
+            return $default;
+        }
+    }
+
+    /**
+     * Fetches rows from the database and optionally decodes the values and builds instances
+     *
+     * @param string|Connection $connection e.g. "users"
+     * @param object $query Query object with `sql` and `params` properties
+     * @param string $decodingTableName Table to be used for decoding the row columns, leave empyty for raw values
+     * @param string $className Instance class name, leave empty for raw values
+     *
+     * @return array
+     */
+    protected function fetchRows($connection, $query, $decodingTableName = null, $className = null)
+    {
+        $conn = is_string($connection)
+            ? $this->getConnection($connection)
+            : $connection;
+
+        try {
+            $rows = $conn->fetchAll($query->sql, $query->params);
+        } catch (PDOException $exception) {
+            return [];
+        }
+
+        if (!$decodingTableName) {
+            return $rows;
+        }
+
+        return array_map(function ($row) use ($decodingTableName, $className) {
+            $data = $this->decodeTableValues($row, $decodingTableName);
+            return $className
+                ? new $className($data)
+                : $data;
+        }, $rows);
+    }
+
+    /**
+     * Fetches a row from the database and optionally decodes the values and builds an instance
+     *
+     * @param string|Connection $connection e.g. "users"
+     * @param object $query Query object with `sql` and `params` properties
+     * @param string $decodingTableName Table to be used for decoding the row columns, leave empyty for raw values
+     * @param string $className Instance class name, leave empty for raw values
+     *
+     * @return mixed|null
+     */
+    protected function fetchRow($connection, $query, $decodingTableName = null, $className = null)
+    {
+        $conn = is_string($connection)
+            ? $this->getConnection($connection)
+            : $connection;
+
+        try {
+            $row = $conn->fetchAssoc($query->sql, $query->params);
+        } catch (PDOException $exception) {
+            return null;
+        }
+
+        if (!$decodingTableName) {
+            return $row;
+        }
+
+        $data = $this->decodeTableValues($row, $decodingTableName);
+        return $className
+            ? new $className($data)
+            : $data;
     }
 }
