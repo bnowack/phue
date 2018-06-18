@@ -276,4 +276,27 @@ trait DatabaseServiceProviderTrait
         $updateModified = false;
         return $this->saveObject($connectionName, $className, $idName, $obj, $updateModified);
     }
+
+    /**
+     * Builds a query projection string
+     *
+     * @param string|array $fields, e.g. ["termId" => "id", "prefLabel" => "label"]
+     *
+     * @return string e.g. `termId AS id, prefLabel AS label`
+     */
+    protected function buildQueryProjectionString($fields)
+    {
+        if (is_string($fields)) {
+            return $fields;
+        }
+
+        $projections = [];
+        foreach ($fields as $field => $alias) {
+            $projections[] = is_numeric($field)
+                ? $alias
+                : "$field AS $alias";
+        }
+
+        return join(', ', $projections);
+    }
 }
