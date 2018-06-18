@@ -4,6 +4,7 @@ namespace Phue\User;
 
 use Doctrine\DBAL\Driver\Statement;
 use Exception;
+use PDOException;
 use Phue\Application\ServiceProvider;
 use Phue\Database\DatabaseServiceProviderTrait;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -70,6 +71,7 @@ class UserProvider extends ServiceProvider implements UserProviderInterface
      * @param int $userId
      *
      * @return User User object
+     *
      * @throws Exception when user id cannot be found
      */
     public function loadUser($userId)
@@ -327,5 +329,123 @@ class UserProvider extends ServiceProvider implements UserProviderInterface
     public function saveUser(User $user)
     {
         return $this->saveObject('users', 'User', 'userId', $user);
+    }
+
+    /**
+     * Imports an entry into the database
+     *
+     * @param User $user
+     *
+     * @return Statement|int
+     */
+    public function importUser(User $user)
+    {
+        return $this->saveUser($user);
+    }
+
+    /**
+     * Retrieves entries from the database
+     *
+     * @param array $filters
+     *
+     * @return User[]|number
+     */
+    public function getUsers($filters = [])
+    {
+        $query = $this->buildQuery($filters);
+        $rows = $this->fetchRows('users', $query, 'User');
+
+        return array_map(function ($row) {
+            return $this->constructUser($row);
+        }, $rows);
+    }
+
+    /**
+     * @param array $filters
+     * @param string|array $fields
+     *
+     * @return object
+     */
+    protected function buildQuery($filters = [], $fields = '*')
+    {
+        $projection = $this->buildQueryProjectionString($fields);
+        $sql = "SELECT $projection FROM User";
+        $params = [];
+        $conditions = [];
+
+        // apply username filter
+        if (!empty($filters['username'])) {
+            $conditions[] = 'username LIKE :username';
+            $params['username'] = $filters['username'] . '%';
+        }
+
+        // apply search filter
+        if (!empty($filters['search'])) {
+            $conditions[] = 'userId || username LIKE :search';
+            $params['search'] = '%' . $filters['search'] . '%';
+        }
+
+        // apply userId filter
+        if (!empty($filters['userId'])) {
+            $conditions[] = 'userId = :userId';
+            $params['userId'] = $filters['userId'];
+        }
+
+        // exclude non-enabled, unless includeDisabled is set
+        if (empty($filters['includeDisabled'])) {
+            $conditions[] = 'enabled = :enabled';
+            $params['enabled'] = 1;
+        }
+
+        // append conditions
+        foreach ($conditions as $index => $condition) {
+            if ($index === 0) {
+                $sql .= " WHERE ($condition)";
+            } else {
+                $sql .= " AND ($condition)";
+            }
+        }
+
+        // append ORDER BY
+        if (!empty($filters['sort'])) {
+            $sql .= ' ORDER BY ' . $filters['sort'];
+        }
+
+        return (object)[
+            'sql' => $sql,
+            'params' => $params
+        ];
+    }
+
+    /**
+     * Counts entries
+     *
+     * @param array $filters
+     *
+     * @return number
+     */
+    public function countUsers($filters = [])
+    {
+        $query = $this->buildQuery($filters, ['COUNT(userId)' => 'rowCount']);
+        return (int)$this->fetchColumn('users', $query, 0);
+    }
+
+    /**
+     * Deletes all entries from the database (except _adminUser)
+     *
+     * @return int
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function deleteAllUsers()
+    {
+        $devAdmin = $this->app->config->get('_adminUser');
+        try {
+            return $this->getConnection('users')
+                ->executeQuery('DELETE FROM User WHERE username != :devAdmin', ['devAdmin' => $devAdmin])
+                ->rowCount();
+        } catch (PDOException $exception) {
+            // don't fail if table does not exist yet
+            return 0;
+        }
     }
 }
