@@ -118,6 +118,8 @@ trait DatabaseServiceProviderTrait
                 return ($value === true) ? 1 : 0;
             case 'array':
                 return json_encode($value ?: []);
+            case 'list':
+                return is_array($value) ? join(',', $value) : '';
             case 'object':
                 return json_encode($value);
             default:
@@ -150,7 +152,7 @@ trait DatabaseServiceProviderTrait
      * @param string $field Field name
      * @param string $type Field target type (int, bool, string, array, object, or an object::class)
      *
-     * @return bool|int|object|string|null
+     * @return bool|int|object|string|array|null
      */
     protected function decodeTableValue($row, $field, $type = 'string')
     {
@@ -170,6 +172,8 @@ trait DatabaseServiceProviderTrait
                 return intval($value);
             case 'bool':
                 return (intval($value) === 1);
+            case 'list':
+                return explode(',', $value);
             case 'array':
                 return json_decode($value, true) ?: [];
             case 'object':
