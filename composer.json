@@ -16,8 +16,8 @@
     "doctrine/dbal": "~2.2"
   },
   "require-dev": {
-    "phpspec/phpspec": "^3.0",
-    "phpunit/phpunit": "^5.0",
+    "phpspec/phpspec": "^4.0",
+    "phpunit/phpunit": "^7.0",
     "ext-xdebug": ">=2.2.1",
     "leanphp/phpspec-code-coverage": "@stable",
     "behat/behat": "3.4.1",
@@ -48,7 +48,7 @@
   "scripts": {
     "behat-definitions": "behat --colors --config test/system/behat.yml -dl --lang=en",
     "system-tests": "behat --colors --config test/system/behat.yml || true",
-    "php-specs": "phpspec run --ansi -c=test/unit/phpspec/phpspec.yml",
-    "php-spec": "phpspec describe --ansi -c=test/unit/phpspec/phpspec.yml"
+    "php-specs": "phpspec run --ansi -c test/unit/phpspec/phpspec.yml",
+    "php-spec": "phpspec describe --ansi -c test/unit/phpspec/phpspec.yml"
   }
 }
