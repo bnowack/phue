@@ -2,16 +2,16 @@
 
 namespace Phue\User;
 
+use Doctrine\DBAL\Driver\Statement;
+use Exception;
 use Phue\Application\ServiceProvider;
 use Phue\Database\DatabaseServiceProviderTrait;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Doctrine\DBAL\Driver\Statement;
-use Exception;
 
 class UserProvider extends ServiceProvider implements UserProviderInterface
 {
@@ -22,7 +22,7 @@ class UserProvider extends ServiceProvider implements UserProviderInterface
             'userId' => 'int',
             'username' => 'string',
             'password' => 'string',
-            'roles' => 'array',
+            'roles' => 'list',
             'enabled' => 'bool',
             'expired' => 'bool',
             'credentialsExpired' => 'bool',
@@ -32,6 +32,27 @@ class UserProvider extends ServiceProvider implements UserProviderInterface
 
     /** @var User */
     protected $currentUser = null;
+
+    /**
+     * Builds database-friendly values
+     *
+     * @param User $user
+     *
+     * @return array
+     */
+    protected function encodeTableValues(User $user)
+    {
+        return [
+            'userId' => $user->getUserId(),
+            'username' => mb_strtolower($user->getUsername()),
+            'password' => $user->getPassword(),
+            'roles' => join(',', $user->getRoles()),
+            'enabled' => $user->isEnabled() ? 1 : 0,
+            'expired' => $user->isAccountNonExpired() ? 0 : 1,
+            'credentialsExpired' => $user->isCredentialsNonExpired() ? 0 : 1,
+            'locked' => $user->isAccountNonLocked() ? 0 : 1
+        ];
+    }
 
     /**
      * Creates a password encoder
@@ -63,19 +84,13 @@ class UserProvider extends ServiceProvider implements UserProviderInterface
             throw new Exception(sprintf('User ID "%s" does not exist.', $userId));
         }
 
-        return new User(
-            $row['userId'],
-            $row['username'],
-            $row['password'],
-            explode(',', $row['roles']),
-            $row['enabled'],
-            $row['expired'],
-            $row['credentialsExpired'],
-            $row['locked']
-        );
+        $data = $this->decodeTableValues($row, 'User');
+        return $this->constructUser($data);
     }
 
     /**
+     * Retrieves a single entry from the database
+     *
      * Used by DatabaseServiceProviderTrait
      *
      * @param int $userId
@@ -109,15 +124,21 @@ class UserProvider extends ServiceProvider implements UserProviderInterface
             throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $username));
         }
 
+        $data = $this->decodeTableValues($row, 'User');
+        return $this->constructUser($data);
+    }
+
+    protected function constructUser($data)
+    {
         return new User(
-            $row['userId'],
-            $row['username'],
-            $row['password'],
-            explode(',', $row['roles']),
-            (intval($row['enabled']) === 1),
-            (intval($row['expired']) === 1),
-            (intval($row['credentialsExpired']) === 1),
-            (intval($row['locked']) === 1)
+            $data['userId'],
+            $data['username'],
+            $data['password'],
+            $data['roles'],
+            $data['enabled'],
+            $data['expired'],
+            $data['credentialsExpired'],
+            $data['locked']
         );
     }
 
@@ -183,9 +204,7 @@ class UserProvider extends ServiceProvider implements UserProviderInterface
         }
 
         // return user or guest user
-        return $this->currentUser
-            ? $this->currentUser
-            : new User(null, 'guest', '', ['guest'], true, false, false, false);
+        return $this->currentUser ?: new User(null, 'guest', '', ['guest'], true, false, false, false);
     }
 
     /**
@@ -294,7 +313,7 @@ class UserProvider extends ServiceProvider implements UserProviderInterface
     {
         return $this->getConnection('users')->delete(
             'User',
-            ['username' => $user->getUsername()]
+            ['userId' => $user->getUserId()]
         );
     }
 
@@ -308,26 +327,5 @@ class UserProvider extends ServiceProvider implements UserProviderInterface
     public function saveUser(User $user)
     {
         return $this->saveObject('users', 'User', 'userId', $user);
-    }
-
-    /**
-     * Builds database-friendly values
-     *
-     * @param User $user
-     *
-     * @return array
-     */
-    protected function encodeTableValues(User $user)
-    {
-        return [
-            'userId' => $user->getUserId(),
-            'username' => mb_strtolower($user->getUsername()),
-            'password' => $user->getPassword(),
-            'roles' => join(',', $user->getRoles()),
-            'enabled' => $user->isEnabled() ? 1 : 0,
-            'expired' => $user->isAccountNonExpired() ? 0 : 1,
-            'credentialsExpired' => $user->isCredentialsNonExpired() ? 0 : 1,
-            'locked' => $user->isAccountNonLocked() ? 0 : 1
-        ];
     }
 }
