@@ -383,6 +383,10 @@ trait DatabaseServiceProviderTrait
             return null;
         }
 
+        if ($row === false) {
+            return null;
+        }
+
         if (!$decodingTableName) {
             return $row;
         }
