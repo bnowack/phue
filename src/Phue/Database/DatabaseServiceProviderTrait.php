@@ -314,7 +314,7 @@ trait DatabaseServiceProviderTrait
      *
      * @return mixed|null
      */
-    protected function fetchColumn($connection, $query, $columnIndex, $default = null)
+    protected function fetchColumn($connection, $query, $columnIndex = 0, $default = null)
     {
         $conn = is_string($connection)
             ? $this->getConnection($connection)
