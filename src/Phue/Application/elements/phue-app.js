@@ -66,7 +66,11 @@ export default {
             let $oldContent = document.querySelector('.phue-app-content');
             $oldContent.classList.add('outdated');
             // load new content
-            phue.http.get(to.fullPath).then(this.renderContent);
+            let href = to.fullPath;
+            href += href.indexOf('?') === -1
+                ? '?content-only=1'
+                : '&content-only=1';
+            phue.http.get(href).then(this.renderContent);
         },
 
         /**
