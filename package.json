@@ -7,6 +7,14 @@
     "package-lock.json"
   ],
   "private": true,
+  "babel": {
+    "plugins": [
+      "syntax-dynamic-import"
+    ],
+    "presets": [
+      "env"
+    ]
+  },
   "devDependencies": {
     "chromedriver": "^2.40.0",
     "geckodriver": "^1.11.0",
