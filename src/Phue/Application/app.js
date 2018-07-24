@@ -9,11 +9,12 @@ import(/* webpackChunkName: "md" */'vue-material/dist/components/MdCard').then(c
 import(/* webpackChunkName: "md" */'vue-material/dist/components/MdList').then(cmp => { Vue.use(cmp.default)});
 import(/* webpackChunkName: "md" */'vue-material/dist/components/MdIcon').then(cmp => { Vue.use(cmp.default)});
 import(/* webpackChunkName: "md" */'vue-material/dist/components/MdDivider').then(cmp => { Vue.use(cmp.default)});
-import(/* webpackChunkName: "md" */'vue-material/dist/components/MdButton').then(cmp => { Vue.use(cmp.default)});
-import(/* webpackChunkName: "md" */'vue-material/dist/components/MdField').then(cmp => { Vue.use(cmp.default)});
-import(/* webpackChunkName: "md" */'vue-material/dist/components/MdSnackbar').then(cmp => { Vue.use(cmp.default)});
-import(/* webpackChunkName: "md" */'vue-material/dist/components/MdProgress').then(cmp => { Vue.use(cmp.default)});
 import(/* webpackChunkName: "md" */'vue-material/dist/components/MdMenu').then(cmp => { Vue.use(cmp.default)});
+
+import(/* webpackChunkName: "md-forms" */'vue-material/dist/components/MdButton').then(cmp => { Vue.use(cmp.default)});
+import(/* webpackChunkName: "md-forms" */'vue-material/dist/components/MdField').then(cmp => { Vue.use(cmp.default)});
+import(/* webpackChunkName: "md-forms" */'vue-material/dist/components/MdSnackbar').then(cmp => { Vue.use(cmp.default)});
+import(/* webpackChunkName: "md-forms" */'vue-material/dist/components/MdProgress').then(cmp => { Vue.use(cmp.default)});
 
 // enable phue components
 Vue.component('phue-app', () => import(/* webpackChunkName: "phue" */ './elements/phue-app.vue'));
