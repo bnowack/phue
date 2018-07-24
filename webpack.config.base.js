@@ -1,6 +1,6 @@
-let fs = require('fs-extra');
-let path = require('path');
-let CleanObsoleteChunks = require('webpack-clean-obsolete-chunks');
+const path = require('path');
+const fs = require('fs-extra');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 fs.emptyDir('./dist');
 
@@ -15,46 +15,57 @@ module.exports = {
         chunkFilename: '[name]-bundle.js?[chunkhash:4]'
     },
     plugins: [
-        new CleanObsoleteChunks({verbose: false})
+        new VueLoaderPlugin()
     ],
     module: {
         noParse: [
             /moment.js/ // avoid locales getting included
         ],
-        loaders: [
+        rules: [
             {
                 test: /\.vue/,
-                loader: 'vue-loader',
-                options: {
-                    loaders: {
-                        scss: 'vue-style-loader!css-loader!sass-loader'
-                    }
-                }
+                use: 'vue-loader'
             },
             {
                 test: /\.js$/,
-                loader: 'babel-loader',
+                use: 'babel-loader',
                 exclude: /node_modules/
             },
             {
                 test: /\.css$/,
-                loader: 'css-loader'
+                use: [
+                    'vue-style-loader',
+                    'css-loader'
+                ]
+            },
+            {
+                test: /\.scss$/,
+                use: [
+                    'vue-style-loader',
+                    'css-loader',
+                    'sass-loader'
+                ]
             },
             {
                 test: /\.(png|jpg|gif|svg|woff)$/,
-                loader: 'file-loader',
-                options: {
-                    name: '[path][name].[ext]?[hash:4]',
-                    publicPath: './',
-                    useRelativePath: false,
-                    emitFile: false
-                }
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[path][name].[ext]?[hash:4]',
+                            publicPath: './',
+                            emitFile: false,
+                            useRelativePath: false
+                        }
+                    }
+                ]
             }
         ]
     },
     resolve: {
         alias: {
             vue: 'vue/dist/vue.js'
-        }
+        },
+        extensions: ['.vue', '.js']
     }
 };

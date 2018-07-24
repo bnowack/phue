@@ -36,7 +36,7 @@
         },
         created() {
             import(/* webpackChunkName: "moment" */ 'moment').then(moment => {
-                this.moment = moment;
+                this.moment = moment.default;
             });
         },
         computed: {
@@ -45,6 +45,9 @@
              */
             formattedChanges() {
                 let moment = this.moment;
+                if (!moment) {
+                    return [];
+                }
                 return this.changes.map(function (change) {
                     change.appliedString = moment
                         ? moment(change.applied * 1000).fromNow()

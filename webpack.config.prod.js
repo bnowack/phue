@@ -1,22 +1,5 @@
-
 let config = require('./webpack.config.base.js');
-let webpack = require('webpack');
-
-process.env.NODE_ENV = 'production';
-
-config.plugins.push(
-    new webpack.DefinePlugin({
-        'process.env': {
-            NODE_ENV: '"production"'
-        }
-    })
-);
-config.plugins.push(
-    new webpack.optimize.UglifyJsPlugin({
-        compress: {
-            warnings: false
-        }
-    })
-);
+config.mode = 'production';
+config.resolve.alias.vue = 'vue/dist/vue.min.js';
 
 module.exports = config;
