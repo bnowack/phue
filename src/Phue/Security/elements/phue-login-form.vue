@@ -13,7 +13,7 @@
                     <span class="md-error">{{ apiResponse.message }}</span>
                 </md-field>
 
-                <md-field :class="{'md-invalid': showAccountError}" :md-toggle-password="false">
+                <md-field :class="{'md-invalid': showAccountError}">
                     <label for="password">{{ passwordLabel }}</label>
                     <md-input type="password" name="password" id="password" v-model="formData.password" :disabled="sending" />
                     <span class="md-error">{{ apiResponse.message }}</span>

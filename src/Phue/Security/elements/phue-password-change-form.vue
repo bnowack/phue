@@ -7,19 +7,19 @@
 
             <md-card-content>
 
-                <md-field :class="{'md-invalid': showPasswordError}" :md-toggle-password="false">
+                <md-field :class="{'md-invalid': showPasswordError}">
                     <label for="oldPassword">{{ oldPasswordLabel }}</label>
                     <md-input type="password" name="oldPassword" id="oldPassword" v-model="formData.oldPassword" :disabled="sending" />
                     <span class="md-error">{{ apiResponse.message }}</span>
                 </md-field>
 
-                <md-field :class="{'md-invalid': showPasswordError}" :md-toggle-password="false">
+                <md-field :class="{'md-invalid': showPasswordError}">
                     <label for="newPassword">{{ newPasswordLabel }}</label>
                     <md-input type="password" name="newPassword" id="newPassword" v-model="formData.newPassword" :disabled="sending" />
                     <span class="md-error">{{ apiResponse.message }}</span>
                 </md-field>
 
-                <md-field :class="{'md-invalid': showPasswordConfirmationError}" :md-toggle-password="false">
+                <md-field :class="{'md-invalid': showPasswordConfirmationError}">
                     <label for="passwordConfirmation">{{ passwordConfirmationLabel }}</label>
                     <md-input type="password" name="passwordConfirmation" id="passwordConfirmation" v-model="formData.passwordConfirmation" :disabled="sending" />
                     <span class="md-error">{{ apiResponse.message }}</span>
