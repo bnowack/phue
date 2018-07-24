@@ -4,7 +4,8 @@
   "description": "Dev tools for Phue",
   "files": [
     "package.json",
-    "package-lock.json"
+    "package-lock.json",
+    "webpack.config.base.js"
   ],
   "private": true,
   "babel": {
