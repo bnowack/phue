@@ -206,14 +206,19 @@ trait DatabaseServiceProviderTrait
      *
      * @param string|Connection $connection e.g. "users"
      * @param string $className e.g. "User"
-     * @param string $idName e.g. "userId"
+     * @param string $idName Name od object ID column e.g. "userId"
      * @param object $obj e.g. User
      * @param boolean $updateModified Whether to auto-update `modified` property
      *
      * @return int
+     * @throws Exception when ID column name is invalid (prevents SQL injection)
      */
     protected function saveObject($connection, $className, $idName, $obj, $updateModified = true)
     {
+        if (!preg_match('/^[a-z0-9]+$/i', $idName)) {
+            throw new Exception('Invalid name of object ID column');
+        }
+
         $conn = is_string($connection)
             ? $this->getConnection($connection)
             : $connection;
@@ -241,10 +246,12 @@ trait DatabaseServiceProviderTrait
         if ($objectId === null) {
             $conn->beginTransaction();
             $affectedRows = $conn->insert($tableName, $data);
-            // update newly generated rowId
-            $objectId = $conn->lastInsertId();
+            // update newly generated object id
+            $rowId = $conn->lastInsertId();
+            $maxId = (int)$conn->fetchColumn("SELECT MAX($idName) FROM $tableName");
+            $objectId = $maxId + 1;
             $data[$idName] = $objectId;
-            $conn->update($tableName, [$idName => $objectId], ['rowId' => $objectId]);
+            $conn->update($tableName, [$idName => $objectId], ['rowId' => $rowId]);
             $conn->commit();
             $obj->{'set' . ucfirst($idName)}($objectId);// add created ID to object reference
             return $affectedRows;
