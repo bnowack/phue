@@ -140,6 +140,53 @@ class User implements AdvancedUserInterface, JsonSerializable
     }
 
     /**
+     * Calls the getter associated with the given property or returns the property value
+     *
+     * @param string $property
+     *
+     * @return mixed
+     * @throws \Exception If property is not defined
+     */
+    public function __get($property)
+    {
+        if (!property_exists($this, $property)) {
+            throw new Exception("Undefined property '$property'");
+        }
+
+        $getter = 'get' . ucfirst($property);
+        if (method_exists($this, $getter)) {
+            return $this->$getter();
+        }
+
+        return $this->$property;
+    }
+
+    /**
+     * Calls the setter associated with the given property or sets the property value
+     *
+     * @param string $property
+     * @param mixed $value
+     * @param bool $strict Whether to throw an exception on undefined properties
+     *
+     * @return mixed
+     * @throws \Exception If property is not defined
+     */
+    public function __set($property, $value = null)
+    {
+        if (!property_exists($this, $property)) {
+            throw new Exception("Undefined property '$property'");
+        }
+
+        $setter = 'set' . ucfirst($property);
+        if (method_exists($this, $setter)) {
+            return $this->$setter($value);
+        }
+
+        $this->$property = $value;
+        return $this;
+    }
+
+    /**
      * Defines JSON-serializable properties and values
      *
      * @return object
