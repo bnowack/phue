@@ -27,6 +27,7 @@ trait DatabaseServiceProviderTrait
 
     protected $sqliteExtended = [];
     protected $sqliteExtensions = [
+      'in_list' => [SqliteExtensions::class, 'inList']
     ];
 
     /**
