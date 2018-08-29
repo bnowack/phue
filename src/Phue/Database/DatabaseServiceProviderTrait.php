@@ -4,6 +4,7 @@ namespace Phue\Database;
 
 use Doctrine\DBAL\Connection;
 use Exception;
+use PDO;
 use PDOException;
 use Phue\Application\Application;
 
@@ -23,6 +24,10 @@ trait DatabaseServiceProviderTrait
 
     /** @var Connection[] */
     protected $connections;
+
+    protected $sqliteExtended = [];
+    protected $sqliteExtensions = [
+    ];
 
     /**
      * Returns the table definitions, e.g. for schema diffs
@@ -56,19 +61,59 @@ trait DatabaseServiceProviderTrait
      */
     public function getConnection($databaseName, $params = null)
     {
-        // return injected connection, if pre-defined as singular connection
+        $conn = null;
+
+        // use injected connection, if pre-defined as singular connection
         if ($this->connection) {
-            return $this->connection;
+            $conn = $this->connection;
         }
 
         // return injected connection, if pre-defined as connection hash
         $connectionHash = $databaseName . json_encode($params);
-        if ($this->connections && !empty($this->connections[$connectionHash])) {
-            return $this->connections[$connectionHash];
+        if (!$conn && $this->connections && !empty($this->connections[$connectionHash])) {
+            $conn = $this->connections[$connectionHash];
         }
 
         // request connection from database provider
-        return $this->app->database->connect($databaseName, $params);
+        if (!$conn) {
+            $conn = $this->app->database->connect($databaseName, $params);
+        }
+
+        // inject sqlite extensions
+        $this->extendSqlite($conn, $databaseName, $params);
+
+        return $conn;
+    }
+
+    /**
+     * Extends a given SQLite connection with user-defined functions
+     *
+     * @param Connection $connection
+     * @param string $databaseName
+     * @param array $params
+     *
+     * @return Connection
+     */
+    protected function extendSqlite(Connection $connection, $databaseName, $params = null)
+    {
+        $connectionHash = $databaseName . json_encode($params);
+        if ($this->sqliteExtended[$connectionHash] ?? null) {
+            return $connection;
+        }
+
+        /** @var PDO $pdo */
+        $pdo = $connection->getWrappedConnection();
+        if (!method_exists($pdo, 'sqliteCreateFunction')) {
+            return $connection;
+        }
+
+        foreach ($this->sqliteExtensions as $functionName => $call) {
+            $pdo->sqliteCreateFunction($functionName, $call);
+        }
+
+        $this->sqliteExtended[$connectionHash] = true;
+
+        return $connection;
     }
 
     /**
