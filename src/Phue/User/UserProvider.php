@@ -379,6 +379,12 @@ class UserProvider extends ServiceProvider implements UserProviderInterface
             $params['username'] = $filters['username'] . '%';
         }
 
+        // apply role filter
+        if (!empty($filters['role'])) {
+            $conditions[] = 'in_list(roles, :role)';
+            $params['role'] = $filters['role'];
+        }
+
         // apply search filter
         if (!empty($filters['search'])) {
             $conditions[] = 'userId || username LIKE :search';
