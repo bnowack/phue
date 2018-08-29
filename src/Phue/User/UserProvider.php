@@ -446,9 +446,8 @@ class UserProvider extends ServiceProvider implements UserProviderInterface
     {
         $devAdmin = $this->app->config->get('_adminUser');
         try {
-            return $this->getConnection('users')
-                ->executeQuery('DELETE FROM User WHERE username != :devAdmin', ['devAdmin' => $devAdmin])
-                ->rowCount();
+            return (int)$this->getConnection('users')
+                ->executeQuery('DELETE FROM User WHERE username != :devAdmin', ['devAdmin' => $devAdmin]);
         } catch (PDOException $exception) {
             // don't fail if table does not exist yet
             return 0;
