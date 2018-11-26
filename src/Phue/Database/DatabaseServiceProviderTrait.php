@@ -294,8 +294,14 @@ trait DatabaseServiceProviderTrait
             $affectedRows = $conn->insert($tableName, $data);
             // update newly generated object id
             $rowId = $conn->lastInsertId();
-            $maxId = (int)$conn->fetchColumn("SELECT MAX($idName) FROM $tableName");
-            $objectId = $maxId + 1;
+            $objectId = $rowId;
+            // tables without primary key may have entries where the object ID is larger than the inserted row ID
+            $maxIds = $conn->fetchAssoc("SELECT MAX($idName) AS maxObjId, rowid FROM $tableName");
+            if (isset($maxIds['rowid']) && $maxIds['rowid'] != $rowId) {
+                // no primary key available, last insert ID may be used elsewhere, so we use the max object ID + 1
+                $objectId = (int)$maxIds['maxObjId'] + 1;
+            }
+
             $data[$idName] = $objectId;
             $conn->update($tableName, [$idName => $objectId], ['rowId' => $rowId]);
             $conn->commit();
