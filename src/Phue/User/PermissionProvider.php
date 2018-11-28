@@ -244,35 +244,27 @@ class PermissionProvider extends ServiceProvider
     {
         $userId = $user->getUserId();
         $userName = $user->getUsername();
+        $values = [];
 
-        $properties = [
+        $attributes = [
             $qualifier,
-            $qualifier . 'Id'
-        ];
-
-        foreach ($properties as $property) {
-            if (!property_exists($context, $property)) {
-                continue;
-            }
-
-            $value = $context->$property;
-            if (in_array($value, [$userId, $userName])) {
-                return true;
-            }
-        }
-
-        $methods = [
-            $qualifier,
+            $qualifier . 'Id',
             'get' . ucfirst($qualifier),
             'get' . ucfirst($qualifier) . 'Id',
         ];
 
-        foreach ($methods as $method) {
-            if (!method_exists($context, $method)) {
-                continue;
+        foreach ($attributes as $attribute) {
+            if (property_exists($context, $attribute)) {
+                $values[] = $context->$attribute;
             }
 
-            $value = $context->$method();
+            if (method_exists($context, $attribute)) {
+                $values[] = $context->$attribute();
+            }
+        }
+
+        // compare collected values to user ID and name
+        foreach ($values as $value) {
             if (in_array($value, [$userId, $userName])) {
                 return true;
             }
