@@ -265,7 +265,11 @@ class PermissionProvider extends ServiceProvider
 
         // compare collected values to user ID and name
         foreach ($values as $value) {
-            if (in_array($value, [$userId, $userName])) {
+            if (is_array($value) && count(array_intersect($value, [$userId, $userName]))) {
+                return true;
+            }
+
+            if (!is_array($value) && in_array($value, [$userId, $userName])) {
                 return true;
             }
         }
