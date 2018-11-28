@@ -2,6 +2,7 @@
 
 namespace Phue\User;
 
+use Exception;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use JsonSerializable;
 
