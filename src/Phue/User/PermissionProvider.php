@@ -137,9 +137,9 @@ class PermissionProvider extends ServiceProvider
             return true;
         }
 
-        // (plain) user permission name has to be same or more generic than target permission name to match
+        // (plain) user permission name has to be same as target permission name to match
         $plainResource = preg_replace('/\([^\)]+\)/', '', $userPermissionName);
-        if (strpos($permissionName, $plainResource) !== 0) {
+        if ($permissionName !== $plainResource) {
             return false;
         }
 
