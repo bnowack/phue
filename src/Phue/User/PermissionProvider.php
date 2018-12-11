@@ -259,7 +259,7 @@ class PermissionProvider extends ServiceProvider
             }
 
             if (method_exists($context, $attribute)) {
-                $values[] = $context->$attribute();
+                $values[] = $context->$attribute($this->app);
             }
         }
 
