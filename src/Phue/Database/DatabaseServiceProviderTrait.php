@@ -285,6 +285,18 @@ trait DatabaseServiceProviderTrait
             $obj->setModified($data['modified']);
         }
 
+        // remove columns that are not yet (or no longer) available in the target table
+        try {
+            $tableInfo = json_encode($conn->fetchAll('PRAGMA table_info(' . $tableName. ')'));
+            foreach (array_keys($data) as $column) {
+                if (!strpos($tableInfo, '"' . $column . '"')) {
+                    unset($data[$column]);
+                }
+            }
+        } catch (PDOException $exception) {
+            // do nothing
+        }
+
         // persist object
         $objectId = $data[$idName];
 
