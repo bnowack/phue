@@ -410,10 +410,11 @@ trait DatabaseServiceProviderTrait
      * @param object $query Query object with `sql` and `params` properties
      * @param string $decodingTableName Table to be used for decoding the row columns, leave empyty for raw values
      * @param string $className Instance class name, leave empty for raw values
+     * @param callable $callback Callback for pre-processing the row data
      *
      * @return array
      */
-    protected function fetchRows($connection, $query, $decodingTableName = null, $className = null)
+    protected function fetchRows($connection, $query, $decodingTableName = null, $className = null, $callback = null)
     {
         $conn = is_string($connection)
             ? $this->getConnection($connection)
@@ -429,7 +430,11 @@ trait DatabaseServiceProviderTrait
             return $rows;
         }
 
-        return array_map(function ($row) use ($decodingTableName, $className) {
+        return array_map(function ($row) use ($decodingTableName, $className, $callback) {
+            if ($callback) {
+                $row = $callback($row);
+            }
+
             $data = $this->decodeTableValues($row, $decodingTableName);
             return $className
                 ? new $className($data)
