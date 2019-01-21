@@ -94,6 +94,39 @@ class DatabaseProvider extends ServiceProvider
     }
 
     /**
+     * Attaches a SQLite DB to a given connection
+     *
+     * @param Connection $connection
+     * @param string $dbName
+     * @param string $alias
+     * @param array $params
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public function attach(Connection $connection, $dbName, $alias = null, $params = null)
+    {
+        $fullDbName = $this->replaceDbNameParams($dbName, $params);
+        // get options
+        $options = $this->getConnectionOptions($dbName, $params);
+
+        if ($options['driver'] !== 'pdo_sqlite') {
+            return true;
+        }
+
+        if (!is_file($options['path'])) {
+            throw new Exception(sprintf('Database %s does not exist', $dbName));
+        }
+
+        $sql = sprintf(
+            'ATTACH DATABASE "%s" AS %s',
+            realpath($options['path']),
+            $alias ?? preg_replace('/[\/-]+/', '_', $dbName)
+        );
+        return $connection->exec($sql);
+    }
+
+    /**
      * @param string $dbNamePattern e.g. "log_*_*"
      * @param null|array $params e.g. ["2018", "01"]
      *

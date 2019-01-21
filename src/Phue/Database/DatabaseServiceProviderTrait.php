@@ -86,6 +86,11 @@ trait DatabaseServiceProviderTrait
         return $conn;
     }
 
+    public function attachDatabase(Connection $connection, $databaseName, $alias = null, $params = null)
+    {
+        return $this->app->database->attach($connection, $databaseName, $alias, $params);
+    }
+
     /**
      * Extends a given SQLite connection with user-defined functions
      *
