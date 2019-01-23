@@ -70,7 +70,16 @@ export default {
             href += href.indexOf('?') === -1
                 ? '?content-only=1'
                 : '&content-only=1';
-            phue.http.get(href).then(this.renderContent);
+            phue.http.get(href)
+                .then(this.renderContent)
+                .catch((error) => {
+                    if (error && error.response) {
+                        this.renderContent(error.response);
+                    } else {
+                        throw 'An error occurred';
+                    }
+                }
+            );
         },
 
         /**
