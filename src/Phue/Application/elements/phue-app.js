@@ -5,6 +5,7 @@ import qs from 'qs'
 export default {
     data() {
         return {
+            contentComponent: null
         }
     },
 
@@ -95,6 +96,11 @@ export default {
             // update appView
             phue.appView = response.headers['x-app-view'];
 
+            // destroy old component
+            if (this.contentComponent) {
+                this.contentComponent.$destroy();
+            }
+
             // replace content area with dynamic component
             let Component = Vue.extend({
                 template: `
@@ -114,10 +120,11 @@ export default {
             if (this.$store) {
                 Component.options.store = this.$store;
             }
+
             // instantiate component
-            let component = new Component();
-            component.$mount(this.$el.querySelector('.phue-app-content'));
-            component.ready = true;// kick off transition
+            this.contentComponent = new Component();
+            this.contentComponent.$mount(this.$el.querySelector('.phue-app-content'));
+            this.contentComponent.ready = true;// kick off transition
         },
 
         /**
