@@ -310,7 +310,7 @@ trait DatabaseServiceProviderTrait
             $conn->beginTransaction();
             $affectedRows = $conn->insert($tableName, $data);
             // update newly generated object id
-            $rowId = $conn->lastInsertId();
+            $rowId = (int) $conn->lastInsertId();
             $objectId = $rowId;
             // tables without primary key may have entries where the object ID is larger than the inserted row ID
             $maxIds = $conn->fetchAssoc("SELECT MAX($idName) AS maxObjId, rowid FROM $tableName");
