@@ -1,6 +1,6 @@
 {
   "appBase": "/",
-  "appVersion": "0.26.5",
+  "appVersion": "0.27.0",
   "appScript": "dist/app-bundle.js",
   "phueSrcPath": "vendor/bnowack/phue/src/",
   "_dataDirectory": "data",
