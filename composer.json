@@ -16,15 +16,9 @@
     "doctrine/dbal": "~2.2"
   },
   "require-dev": {
-    "phpspec/phpspec": "^4.0",
+    "phpspec/phpspec": "^6.0",
     "phpunit/phpunit": "^7.0",
-    "ext-xdebug": ">=2.2.1",
-    "leanphp/phpspec-code-coverage": "@stable",
-    "behat/behat": "3.4.1",
-    "behat/mink-extension": "2.2",
-    "behat/mink-goutte-driver": "1.2.1",
-    "behat/mink-selenium2-driver": "dev-master#46404b0",
-    "se/selenium-server-standalone": "3.4.0"
+    "ext-xdebug": ">=2.2.1"
   },
   "autoload": {
     "psr-4": {
@@ -46,8 +40,6 @@
     "process-timeout": 36000
   },
   "scripts": {
-    "behat-definitions": "behat --colors --config test/system/behat.yml -dl --lang=en",
-    "system-tests": "behat --colors --config test/system/behat.yml || true",
     "php-specs": "phpspec run --ansi -c test/unit/phpspec/phpspec.yml",
     "php-spec": "phpspec describe --ansi -c test/unit/phpspec/phpspec.yml"
   }
