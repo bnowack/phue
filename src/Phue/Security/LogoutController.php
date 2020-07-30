@@ -25,19 +25,19 @@ class LogoutController
      */
     public function handleLogoutRequest(Application $app, Request $request, $routeConfig)
     {
-        // validate API token
-        if (!$app->security->validateToken('logout', $request->get('token'))) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Invalid token'
-            ]);
+         $data = [
+            'success' => true,
+            'successHref' => $routeConfig->successHref,
+            'message' => 'Logged out',
+        ];
+
+         if ($app->security->validateToken('logout', $request->get('token'))) {
+            $app->session->set('user', null);
+        } else{
+            $data['success'] = false;
+            $data['message'] = 'Invalid token';
         }
 
-        $app->session->set('user', null);
-
-        return new JsonResponse([
-            'success' => true,
-            'successHref' => $routeConfig->successHref
-        ]);
+        return new JsonResponse($data);
     }
 }
