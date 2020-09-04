@@ -43,7 +43,7 @@
     "fs-extra": "^4.0.3",
     "moment": "^2.24.0",
     "native-promise-only": "^0.8.1",
-    "node-sass": "^4.13.0",
+    "node-sass": "^4.13.1",
     "qs": "^6.9.1",
     "sass-loader": "^7.3.1",
     "vue": "^2.6.10",
